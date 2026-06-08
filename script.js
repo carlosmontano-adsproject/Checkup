@@ -4,6 +4,14 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9V0kE2RJ-g5m-sVZQRinl7iZckJcO7gydxklc94wm11UvS7v9VN0IFyGHVkTJADfHwA/exec";
 // =====================================================
 
+// =====================================================
+// ⚠️  SUPABASE: pega aquí tu URL de proyecto y tu anon key  ⚠️
+// (la anon key es pública y segura: está protegida por RLS)
+// =====================================================
+const SUPABASE_URL = "https://thchgwlgabddkxdkfocc.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoY2hnd2xnYWJkZGt4ZGtmb2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTM1MjAsImV4cCI6MjA5NjUyOTUyMH0.qyIGK-ICLkpNY3xdQe4Q1zNdY3Fgb8nSQ-koUCBNIv4";
+// =====================================================
+
 const CATS={fiscal:{name:"Cumplimiento Fiscal y Control Interno",icon:"🏛️"},estrategia:{name:"Estrategia y Optimización Fiscal",icon:"📊"},legal:{name:"Legal y Contratos",icon:"⚖️"},patrimonio:{name:"Sucesión y Protección Patrimonial",icon:"🛡️"},laboral:{name:"Seguridad Social y Laboral",icon:"👥"},gestion:{name:"Gestión y Servicios",icon:"⚙️"}};
 const QS=[
 {id:1,cat:"fiscal",short:"Control interno de proveedores",text:"¿En tu proceso de control interno para contratar proveedores y evitar contingencias con el SAT, tienes y conservas en todos los casos los elementos mínimos de ese proveedor: acta constitutiva, constancia de situación fiscal, INE del representante legal, constancia de activos, personal e infraestructura, constancia de pago de contribuciones y cuotas del IMSS?"},
@@ -101,9 +109,42 @@ function sendToGoogleSheets(data){
   setTimeout(function(){document.body.removeChild(form)},1000);
 }
 
+// ===== ENVIAR A SUPABASE (inserta una fila por evento) =====
+function supabaseRow(data){
+  var row={
+    lead_id:data.id||'',
+    nombre:data.nombre||'',empresa:data.empresa||'',email:data.email||'',
+    telefono:data.telefono||'',cargo:data.cargo||'',
+    estado:data.estado||'',tipo:data.tipo||'',
+    preguntas_respondidas:data.preguntasRespondidas||0,
+    score_total:data.scoreTotal?Number(data.scoreTotal):null,
+    nivel:data.nivel||null,
+    alertas_rojas:data.alertasRojas||null,
+    alertas_amarillas:data.alertasAmarillas||null
+  };
+  for(var i=1;i<=20;i++){var v=data['p'+i];row['p'+i]=(v===''||v===undefined||v===null)?null:Number(v)}
+  return row;
+}
+function sendToSupabase(data,keepalive){
+  if(!SUPABASE_URL||!SUPABASE_ANON_KEY)return;
+  try{
+    fetch(SUPABASE_URL.replace(/\/+$/,'')+'/rest/v1/leads',{
+      method:'POST',
+      keepalive:!!keepalive,
+      headers:{
+        'apikey':SUPABASE_ANON_KEY,
+        'Authorization':'Bearer '+SUPABASE_ANON_KEY,
+        'Content-Type':'application/json',
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify(supabaseRow(data))
+    }).catch(function(){});
+  }catch(e){}
+}
+
 // ===== GUARDAR LEAD APENAS DEJA SU NOMBRE (Solo Lead / Incompleto) =====
 function guardarLeadInicial(){
-  sendToGoogleSheets({
+  var d={
     id:leadId,
     timestamp:new Date().toISOString(),
     fecha:new Date().toLocaleDateString('es-MX'),
@@ -111,7 +152,9 @@ function guardarLeadInicial(){
     estado:'Incompleto',
     tipo:'Solo Lead',
     preguntasRespondidas:0
-  });
+  };
+  sendToGoogleSheets(d);
+  sendToSupabase(d);
 }
 
 // Payload con el avance parcial del quiz (hasta dónde llegó)
@@ -147,7 +190,7 @@ document.addEventListener('visibilitychange',function(){
   if(document.visibilityState==='hidden' && leadId && !quizCompletado){
     var enQuiz=document.getElementById('screen-quiz').classList.contains('active');
     var enGate=document.getElementById('screen-gate').classList.contains('active');
-    if(enQuiz||enGate) enviarBeacon(payloadParcial());
+    if(enQuiz||enGate){var d=payloadParcial();enviarBeacon(d);sendToSupabase(d,true);}
   }
 });
 
@@ -248,8 +291,8 @@ function finishQuiz(){
   const isExc=total>=91;
   const pct=Math.round((total/100)*100);
 
-  // ===== ENVIAR A GOOGLE SHEETS (lead completo) =====
-  sendToGoogleSheets({
+  // ===== ENVIAR A GOOGLE SHEETS + SUPABASE (lead completo) =====
+  var datosCompletos={
     id:leadId,
     timestamp:new Date().toISOString(),
     fecha:new Date().toLocaleDateString('es-MX'),
@@ -264,7 +307,9 @@ function finishQuiz(){
     scoreTotal:total,nivel:info.level,
     alertasRojas:reds.map(q=>'P'+q.id+': '+q.short).join('; '),
     alertasAmarillas:yellows.map(q=>'P'+q.id+': '+q.short).join('; ')
-  });
+  };
+  sendToGoogleSheets(datosCompletos);
+  sendToSupabase(datosCompletos);
   fbqt('trackCustom','CheckUpCompletado',{content_name:'CheckUp Empresarial',score:total,nivel:info.level});
 
   const catScores=Object.entries(CATS).map(([k,cat])=>{const qs=QS.filter(q=>q.cat===k);const avg=qs.reduce((s,q)=>s+(answers[QS.indexOf(q)]||0),0)/qs.length;return{...cat,key:k,avg:Math.round(avg*10)/10,pct:Math.round((avg/5)*100)}});
