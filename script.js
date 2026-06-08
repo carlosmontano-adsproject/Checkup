@@ -8,8 +8,8 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9V0kE2RJ-g5
 // ⚠️  SUPABASE: pega aquí tu URL de proyecto y tu anon key  ⚠️
 // (la anon key es pública y segura: está protegida por RLS)
 // =====================================================
-const SUPABASE_URL = "";       // Ej: https://xxxxxxxx.supabase.co
-const SUPABASE_ANON_KEY = "";  // Ej: eyJhbGciOi...
+const SUPABASE_URL = "https://thchgwlgabddkxdkfocc.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoY2hnd2xnYWJkZGt4ZGtmb2NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTM1MjAsImV4cCI6MjA5NjUyOTUyMH0.qyIGK-ICLkpNY3xdQe4Q1zNdY3Fgb8nSQ-koUCBNIv4";
 // =====================================================
 
 const CATS={fiscal:{name:"Cumplimiento Fiscal y Control Interno",icon:"🏛️"},estrategia:{name:"Estrategia y Optimización Fiscal",icon:"📊"},legal:{name:"Legal y Contratos",icon:"⚖️"},patrimonio:{name:"Sucesión y Protección Patrimonial",icon:"🛡️"},laboral:{name:"Seguridad Social y Laboral",icon:"👥"},gestion:{name:"Gestión y Servicios",icon:"⚙️"}};
