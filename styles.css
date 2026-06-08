@@ -39,7 +39,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .dots{display:flex;justify-content:center;gap:5px;margin-top:16px;flex-wrap:wrap}
 .dot{width:9px;height:9px;border-radius:50%;cursor:pointer;transition:all .25s;background:#F3F4F6;border:1px solid #E5E7EB}
 .dot.active{background:var(--red);border-color:var(--red);transform:scale(1.5)}.dot.done{background:var(--text-l)}
-.q-card{transition:opacity .28s ease,transform .28s ease}.q-card.slide-out-next{opacity:0;transform:translateX(50px)}.q-card.slide-out-prev{opacity:0;transform:translateX(-50px)}
+.q-card{transition:opacity .2s ease,transform .2s ease}.q-card.slide-out-next{opacity:0;transform:translateX(40px)}.q-card.slide-out-prev{opacity:0;transform:translateX(-40px)}
 .results-enter{opacity:0;transform:translateY(20px);transition:all .7s ease}.results-enter.show{opacity:1;transform:translateY(0)}
 .gauge-wrap{position:relative;width:160px;height:160px;margin:0 auto}.gauge-wrap svg{width:100%;height:100%}
 .gauge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.gauge-score{font-size:36px;font-weight:900}.gauge-label{font-size:11px;color:var(--text-l)}
@@ -62,3 +62,32 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .footer{text-align:center;padding:14px 0 8px}.footer p{font-size:14px;color:var(--text-m);line-height:1.6}.footer .copy{font-size:11px;color:var(--text-l);margin-top:10px}
 .screen{display:none}.screen.active{display:block}
 @media(max-width:600px){.wrap{padding:16px 12px}.card{padding:28px 18px}.score-top{flex-direction:column;text-align:center}.score-info{text-align:center}.features{gap:8px}.feat{font-size:12px;padding:6px 10px}.q-text{font-size:15px}.btn{padding:14px 24px;font-size:15px}}
+
+/* ===== Resaltado que sigue al cursor ===== */
+#cursor-glow{position:fixed;top:0;left:0;width:46px;height:46px;border-radius:50%;pointer-events:none;z-index:9999;opacity:0;background:radial-gradient(circle,rgba(226,35,26,.45),rgba(226,35,26,0) 70%);filter:blur(6px);transition:opacity .25s ease;will-change:transform}
+
+/* Brillo interno que sigue al cursor dentro de cada opción */
+.opt{position:relative;overflow:hidden}
+.opt>*{position:relative;z-index:1}
+.opt::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(150px circle at var(--mx,50%) var(--my,50%),rgba(226,35,26,.12),transparent 60%);opacity:0;transition:opacity .25s ease}
+.opt:hover::before{opacity:1}
+
+/* ===== Animaciones de entrada ===== */
+@keyframes optIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.opt-in{animation:optIn .32s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .45s ease both}
+.q-text{margin-top:6px}
+.progress-bar{box-shadow:0 0 8px rgba(226,35,26,.4)}
+#progressMsg{font-weight:600;color:var(--red)}
+
+/* ===== Pantalla de desbloqueo (gate) ===== */
+@keyframes pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.gate-emoji{font-size:46px;line-height:1;margin-bottom:8px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both}
+
+/* ===== Accesibilidad: respeta a quien prefiere menos movimiento ===== */
+@media(prefers-reduced-motion:reduce){
+  #cursor-glow{display:none}
+  .opt-in,.fade-up,.gate-emoji{animation:none}
+  .q-card{transition:none}
+}

@@ -34,54 +34,18 @@ fbq('init', '2470777933335351');
 fbq('track', 'PageView');
 </script>
 <!-- End Meta Pixel -->
-
-<!-- Tracker Check-Up Auren -->
-<script>
-(function () {
-  var yaInicio = false, yaCompleto = false, ultimaPregunta = 0;
-
-  function leerPaso() {
-    var txt = document.body.innerText || "";
-    var m = txt.match(/Pregunta\s+(\d+)\s+de\s+20/i);
-    if (!m) return;
-    var n = parseInt(m[1], 10);
-    if (n === ultimaPregunta) return;
-    ultimaPregunta = n;
-
-    // Pregunta 1 = ya pasó el formulario => Lead real (con datos de contacto)
-    if (n === 1 && !yaInicio) {
-      yaInicio = true;
-      fbq('track', 'Lead', {content_name:'CheckUp Empresarial', content_category:'Autodiagnostico'});
-    }
-    // Progreso pregunta por pregunta (para ver dónde abandonan)
-    fbq('trackCustom', 'CheckUpPregunta', {paso:n, total:20});
-  }
-
-  // Completó: clic en "Ver mi diagnóstico" estando en la última pregunta
-  document.addEventListener('click', function (e) {
-    var el = e.target.closest('button, a'); if (!el) return;
-    var t = (el.innerText || '').trim().toLowerCase();
-    if (t.indexOf('ver mi diagnóstico') !== -1 && !yaCompleto && ultimaPregunta >= 19) {
-      yaCompleto = true;
-      fbq('trackCustom', 'CheckUpCompletado', {content_name:'CheckUp Empresarial'});
-    }
-  }, true);
-
-  new MutationObserver(leerPaso).observe(document.documentElement,
-    {childList:true, subtree:true, characterData:true});
-  leerPaso();
-})();
-</script>
-<!-- End Tracker -->
 </head>
 <body>
+
+<!-- Resaltado que sigue al cursor sobre botones y opciones -->
+<div id="cursor-glow" aria-hidden="true"></div>
 
 <!-- IFRAME OCULTO para enviar datos a Google Sheets sin redirigir la página -->
 <iframe name="gsheet-iframe" id="gsheet-iframe" style="display:none"></iframe>
 
 <!-- LOGO SVG TEMPLATE -->
 <template id="tpl-logo">
-<svg viewBox="0 0 98 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 98 45" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Auren">
 <path class="txt" d="M24.8307 21.7304V19.3456C23.2567 19.4057 22.1726 19.6716 21.5542 20.1263C20.9358 20.5809 20.6307 21.353 20.6307 22.4253C20.6307 23.2574 20.8234 23.9094 21.2089 24.3898C21.5944 24.8616 22.0842 25.1018 22.6865 25.1018C23.3691 25.1018 23.8992 24.8616 24.2686 24.3898C24.646 23.9094 24.8307 23.0258 24.8307 21.7304ZM24.8307 18.3848V15.0993C24.8307 14.2071 24.7263 13.5809 24.5175 13.2206C24.3087 12.8517 23.7787 12.6716 22.9114 12.6716C22.2288 12.6716 21.6907 12.7745 21.3053 12.989C20.9198 13.2034 20.727 13.4179 20.727 13.6324C20.727 13.7782 20.8636 14.0012 21.1366 14.2929C21.4097 14.5846 21.5462 14.9535 21.5462 15.391C21.5462 16.0258 21.3213 16.5662 20.8636 17.0209C20.4139 17.4755 19.8437 17.7071 19.153 17.7071C18.5266 17.7071 17.9886 17.4927 17.5308 17.0552C17.0811 16.6263 16.8482 16.0944 16.8482 15.4767C16.8482 14.4044 17.4586 13.4951 18.6712 12.7488C19.8838 12.0025 21.5622 11.625 23.7145 11.625C25.3768 11.625 26.7661 11.848 27.8904 12.2855C29.0147 12.723 29.5689 13.7096 29.5689 15.2451V22.9571C29.5689 24.2868 29.9222 24.9474 30.637 24.9474C30.8297 24.9474 31.1108 24.8358 31.4561 24.6042L31.9299 25.4277C30.9421 26.6287 29.8018 27.2378 28.5008 27.2378C27.1998 27.2378 26.0032 26.5001 25.0877 25.0331C23.5699 26.5086 21.8754 27.2378 20.0123 27.2378C18.7595 27.2378 17.7718 26.8947 17.049 26.2084C16.3262 25.5221 15.9648 24.6643 15.9648 23.6349C15.9648 20.3836 18.9201 18.6336 24.8227 18.3848"/>
 <path class="txt" d="M49.0626 12.0977V25.8823H51.0886V26.9768H48.0947C46.6018 26.9768 45.6339 27.0202 45.1828 27.0984C44.7398 27.1766 44.4117 27.2287 44.1984 27.2374V24.2059H44.1246C43.6489 25.144 42.9352 25.8823 41.9755 26.4296C41.024 26.9681 39.9905 27.2374 38.8668 27.2374C37.743 27.2374 36.8899 27.0115 36.1353 26.5772C35.3807 26.1342 34.9049 25.6478 34.7081 25.1093C34.5112 24.5707 34.4128 23.7195 34.4128 22.5469V13.2529H32.3867V12.1063H39.2769V21.9563C39.2769 23.459 39.3343 24.4492 39.4573 24.9356C39.5722 25.4133 39.9167 25.6565 40.4745 25.6565C41.0323 25.6565 41.7049 25.3959 42.4349 24.8661C43.1567 24.3362 43.6325 23.7282 43.8621 23.0507C44.0836 22.3732 44.1984 21.4264 44.1984 20.2104V13.2616H41.8279V12.115H49.0544L49.0626 12.0977Z"/>
 <path class="txt" d="M57.7617 11.8392V15.8662H57.8334C58.1124 14.4267 58.5668 13.3643 59.2045 12.6703C59.8422 11.9677 60.5437 11.625 61.3169 11.625C62.0902 11.625 62.6801 11.9077 63.1504 12.4732C63.6207 13.0387 63.8598 13.7327 63.8598 14.5638C63.8598 15.2664 63.6765 15.8405 63.3258 16.2689C62.967 16.6973 62.5366 16.9115 62.0264 16.9115C61.5162 16.9115 61.0858 16.7144 60.7191 16.3117C60.3524 15.909 60.177 15.4635 60.177 14.9837C60.177 14.3753 60.2727 13.9469 60.4799 13.707C60.6792 13.4671 60.7829 13.3043 60.7829 13.2358C60.7829 13.1073 60.6872 13.0387 60.5039 13.0387C59.9299 13.0387 59.3719 13.6299 58.8538 14.8294C58.3276 16.0204 58.0646 17.9568 58.0646 20.63V25.6509H60.6394V26.7647H51.5439V25.6509H53.3375V13.2186H51.5439V12.0877H53.8397C55.0673 12.0877 55.9681 12.0534 56.542 11.9677L57.1638 11.8478H57.7697L57.7617 11.8392Z"/>
@@ -97,22 +61,18 @@ fbq('track', 'PageView');
   <div style="text-align:center;padding-top:8px" id="logo-welcome"></div>
   <div class="subtitle">Consultoría · Auditoría · Asesoría Empresarial</div>
   <div class="divider"></div>
-  <div class="card" style="text-align:center">
+  <div class="card fade-up" style="text-align:center">
     <div class="badge" style="margin-bottom:14px">Autodiagnóstico Gratuito</div>
     <h1 style="font-size:30px;font-weight:800;margin-bottom:10px;line-height:1.25">Check-Up Empresarial</h1>
-    <p style="font-size:16px;color:var(--text-m);line-height:1.6;max-width:500px;margin:0 auto 24px">Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa. Responde 20 preguntas y recibe un diagnóstico personalizado al instante.</p>
+    <p style="font-size:16px;color:var(--text-m);line-height:1.6;max-width:500px;margin:0 auto 24px">Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa. Responde unas preguntas rápidas y recibe un diagnóstico personalizado al instante.</p>
     <div class="features">
       <div class="feat"><span style="font-size:16px">🔒</span>100% Confidencial</div>
       <div class="feat"><span style="font-size:16px">⏱️</span>Solo 5 minutos</div>
       <div class="feat"><span style="font-size:16px">📊</span>Resultado inmediato</div>
     </div>
     <form id="welcomeForm" style="text-align:left" novalidate>
-      <div class="field" id="f-nombre"><label for="in-nombre">Nombre completo <span class="req">*</span></label><input id="in-nombre" type="text" name="nombre" autocomplete="name" placeholder="Ej: Juan Pérez García" required><div class="errmsg">Campo requerido</div></div>
-      <div class="field" id="f-empresa"><label for="in-empresa">Empresa <span class="req">*</span></label><input id="in-empresa" type="text" name="empresa" autocomplete="organization" placeholder="Ej: Grupo Industrial del Bajío" required><div class="errmsg">Campo requerido</div></div>
-      <div class="field" id="f-email"><label for="in-email">Correo electrónico <span class="req">*</span></label><input id="in-email" type="email" name="email" autocomplete="email" placeholder="Ej: juan@empresa.com" required><div class="errmsg">Ingresa un email válido</div></div>
-      <div class="field" id="f-telefono"><label for="in-telefono">Teléfono <span class="req">*</span></label><input id="in-telefono" type="tel" name="telefono" autocomplete="tel" inputmode="tel" placeholder="Ej: 477 123 4567" required><div class="errmsg">Mínimo 10 dígitos</div></div>
-      <div class="field" id="f-cargo"><label for="in-cargo">Cargo / Puesto</label><input id="in-cargo" type="text" name="cargo" autocomplete="organization-title" placeholder="Ej: Director General"></div>
-      <button type="submit" class="btn" style="margin-top:12px">Comenzar mi diagnóstico →</button>
+      <div class="field" id="f-nombre"><label for="in-nombre">¿Cómo te llamas? <span class="req">*</span></label><input id="in-nombre" type="text" name="nombre" autocomplete="given-name" placeholder="Ej: Juan Pérez" required><div class="errmsg">Cuéntanos tu nombre para personalizar tu diagnóstico</div></div>
+      <button type="submit" class="btn" style="margin-top:6px">Comenzar mi diagnóstico →</button>
     </form>
     <p style="font-size:11px;color:var(--text-l);margin-top:12px">Tu información es confidencial y será utilizada únicamente para generar tu diagnóstico. Al continuar, aceptas nuestro <a href="https://auren.com/mx/politica-de-privacidad/" target="_blank" rel="noopener" style="color:var(--red);text-decoration:underline">Aviso de Privacidad</a>.</p>
   </div>
@@ -125,22 +85,42 @@ fbq('track', 'PageView');
 <div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
     <div id="logo-quiz"></div>
-    <span id="quiz-empresa" style="font-size:13px;color:var(--text-l);font-weight:500"></span>
+    <span id="quiz-greet" style="font-size:13px;color:var(--text-l);font-weight:500"></span>
   </div>
   <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-  <div class="progress-info"><span id="progressLabel">Pregunta 1 de 20</span><span id="progressPct">0%</span></div>
+  <div class="progress-info"><span id="progressMsg">¡Comencemos! 💪</span><span id="progressPct">0%</span></div>
   <div class="card q-card" id="questionCard">
     <div class="badge badge--cat" id="qCatBadge"></div>
-    <div class="q-num" id="qNum">01</div>
     <h2 class="q-text" id="qText"></h2>
     <div class="options" id="optionsContainer"></div>
     <div class="nav-row">
       <button class="btn btn--ghost" id="btnPrev" onclick="goBack()">← Anterior</button>
-      <button class="btn" id="btnFinish" style="display:none" onclick="finishQuiz()">Ver mi diagnóstico →</button>
-      <span id="finishHint" style="display:none;font-size:13px;color:var(--orange)">Responde todas las preguntas</span>
+      <button class="btn" id="btnFinish" style="display:none" onclick="goToGate()">Ver mi diagnóstico →</button>
+      <span id="finishHint" style="display:none;font-size:13px;color:var(--orange)">Elige una opción para continuar</span>
     </div>
   </div>
-  <div class="dots" id="dotsContainer"></div>
+</div>
+</div>
+
+<!-- ========== GATE (desbloquear resultados) ========== -->
+<div id="screen-gate" class="screen">
+<div class="wrap">
+  <div style="text-align:center;padding-top:8px" id="logo-gate"></div>
+  <div class="divider"></div>
+  <div class="card fade-up" style="text-align:center">
+    <div class="gate-emoji">🎉</div>
+    <div class="badge" style="margin-bottom:12px">Diagnóstico listo</div>
+    <h1 id="gate-title" style="font-size:25px;font-weight:800;margin-bottom:8px;line-height:1.3">¡Tu diagnóstico está listo!</h1>
+    <p style="font-size:15px;color:var(--text-m);line-height:1.6;max-width:460px;margin:0 auto 22px">Completa tus datos para ver tu resultado personalizado al instante y recibir una copia por correo.</p>
+    <form id="gateForm" style="text-align:left" novalidate>
+      <div class="field" id="f-email"><label for="in-email">Correo electrónico <span class="req">*</span></label><input id="in-email" type="email" name="email" autocomplete="email" placeholder="Ej: juan@empresa.com" required><div class="errmsg">Ingresa un email válido</div></div>
+      <div class="field" id="f-telefono"><label for="in-telefono">WhatsApp / Celular <span class="req">*</span></label><input id="in-telefono" type="tel" name="telefono" autocomplete="tel" inputmode="tel" placeholder="Ej: 477 123 4567" required><div class="errmsg">Mínimo 10 dígitos</div></div>
+      <div class="field" id="f-empresa"><label for="in-empresa">Empresa <span class="req">*</span></label><input id="in-empresa" type="text" name="empresa" autocomplete="organization" placeholder="Ej: Grupo Industrial del Bajío" required><div class="errmsg">Campo requerido</div></div>
+      <div class="field" id="f-cargo"><label for="in-cargo">Cargo / Puesto</label><input id="in-cargo" type="text" name="cargo" autocomplete="organization-title" placeholder="Ej: Director General"></div>
+      <button type="submit" class="btn" style="margin-top:6px">🔓 Ver mi diagnóstico →</button>
+    </form>
+    <p style="font-size:11px;color:var(--text-l);margin-top:12px">Tus datos son confidenciales. Al continuar, aceptas nuestro <a href="https://auren.com/mx/politica-de-privacidad/" target="_blank" rel="noopener" style="color:var(--red);text-decoration:underline">Aviso de Privacidad</a>.</p>
+  </div>
 </div>
 </div>
 
