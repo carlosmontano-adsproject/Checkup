@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Check-Up Empresarial | Auren México</title>
 <meta name="description" content="Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa con el autodiagnóstico gratuito de Auren.">
+
+<!-- Open Graph (vista previa al compartir en Facebook, WhatsApp, LinkedIn) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Check-Up Empresarial | Auren México">
+<meta property="og:description" content="Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa con el autodiagnóstico gratuito de Auren.">
+<meta property="og:locale" content="es_MX">
+<meta property="og:site_name" content="Auren México">
+<!-- TODO: reemplaza estas dos URLs por las definitivas de tu sitio -->
+<meta property="og:url" content="https://carlosmontano-adsproject.github.io/Checkup/">
+<meta property="og:image" content="https://carlosmontano-adsproject.github.io/Checkup/og-image.png">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Check-Up Empresarial | Auren México">
+<meta name="twitter:description" content="Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa con el autodiagnóstico gratuito de Auren.">
+<meta name="twitter:image" content="https://carlosmontano-adsproject.github.io/Checkup/og-image.png">
+
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
 <link rel="stylesheet" href="styles.css">
 <!-- Meta Pixel Auren - aurenb.mx -->
@@ -91,11 +107,11 @@ fbq('track', 'PageView');
       <div class="feat"><span style="font-size:16px">📊</span>Resultado inmediato</div>
     </div>
     <form id="welcomeForm" style="text-align:left" novalidate>
-      <div class="field" id="f-nombre"><label>Nombre completo <span class="req">*</span></label><input type="text" name="nombre" placeholder="Ej: Juan Pérez García" required><div class="errmsg">Campo requerido</div></div>
-      <div class="field" id="f-empresa"><label>Empresa <span class="req">*</span></label><input type="text" name="empresa" placeholder="Ej: Grupo Industrial del Bajío" required><div class="errmsg">Campo requerido</div></div>
-      <div class="field" id="f-email"><label>Correo electrónico <span class="req">*</span></label><input type="email" name="email" placeholder="Ej: juan@empresa.com" required><div class="errmsg">Ingresa un email válido</div></div>
-      <div class="field" id="f-telefono"><label>Teléfono <span class="req">*</span></label><input type="tel" name="telefono" placeholder="Ej: 477 123 4567" required><div class="errmsg">Mínimo 10 dígitos</div></div>
-      <div class="field" id="f-cargo"><label>Cargo / Puesto</label><input type="text" name="cargo" placeholder="Ej: Director General"></div>
+      <div class="field" id="f-nombre"><label for="in-nombre">Nombre completo <span class="req">*</span></label><input id="in-nombre" type="text" name="nombre" autocomplete="name" placeholder="Ej: Juan Pérez García" required><div class="errmsg">Campo requerido</div></div>
+      <div class="field" id="f-empresa"><label for="in-empresa">Empresa <span class="req">*</span></label><input id="in-empresa" type="text" name="empresa" autocomplete="organization" placeholder="Ej: Grupo Industrial del Bajío" required><div class="errmsg">Campo requerido</div></div>
+      <div class="field" id="f-email"><label for="in-email">Correo electrónico <span class="req">*</span></label><input id="in-email" type="email" name="email" autocomplete="email" placeholder="Ej: juan@empresa.com" required><div class="errmsg">Ingresa un email válido</div></div>
+      <div class="field" id="f-telefono"><label for="in-telefono">Teléfono <span class="req">*</span></label><input id="in-telefono" type="tel" name="telefono" autocomplete="tel" inputmode="tel" placeholder="Ej: 477 123 4567" required><div class="errmsg">Mínimo 10 dígitos</div></div>
+      <div class="field" id="f-cargo"><label for="in-cargo">Cargo / Puesto</label><input id="in-cargo" type="text" name="cargo" autocomplete="organization-title" placeholder="Ej: Director General"></div>
       <button type="submit" class="btn" style="margin-top:12px">Comenzar mi diagnóstico →</button>
     </form>
     <p style="font-size:11px;color:var(--text-l);margin-top:12px">Tu información es confidencial y será utilizada únicamente para generar tu diagnóstico. Al continuar, aceptas nuestro <a href="https://auren.com/mx/politica-de-privacidad/" target="_blank" rel="noopener" style="color:var(--red);text-decoration:underline">Aviso de Privacidad</a>.</p>
