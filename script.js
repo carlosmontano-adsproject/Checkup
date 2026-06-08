@@ -321,6 +321,7 @@ function buildExitMsg(){
 function showExitModal(){
   if(!exitModal)return;
   document.getElementById('exit-msg').innerHTML=buildExitMsg();
+  exitModal.style.display='flex';
   exitModal.classList.add('show');
   exitModal.setAttribute('aria-hidden','false');
   exitShown=true;
@@ -328,6 +329,7 @@ function showExitModal(){
 }
 function closeExitModal(){
   if(!exitModal)return;
+  exitModal.style.display='none';
   exitModal.classList.remove('show');
   exitModal.setAttribute('aria-hidden','true');
 }
