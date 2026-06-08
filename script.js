@@ -29,6 +29,18 @@ const QS=[
 ];
 const OPTS=[{v:1,label:"Nada implementado",cls:"c-red"},{v:2,label:"Muy débil / informal",cls:"c-red"},{v:3,label:"Parcial / en proceso",cls:"c-orange"},{v:4,label:"Sólido, áreas por afinar",cls:"c-green"},{v:5,label:"Totalmente implementado",cls:"c-green"}];
 const CM={red:"#e2231a",orange:"#F59E0B",green:"#16A34A",gold:"#D97706"};
+const TOTAL_Q=QS.length;
+
+// Mensajes motivadores según el avance (sin revelar el total de preguntas)
+function progressMessage(answered){
+  const p=answered/TOTAL_Q;
+  if(answered===0)return"¡Comencemos! 💪";
+  if(p<0.25)return"¡Buen comienzo! 🚀";
+  if(p<0.5)return"¡Vas muy bien! 👏";
+  if(p<0.75)return"¡Más de la mitad! 🔥";
+  if(p<1)return"¡Ya casi terminas! 🏁";
+  return"¡Último paso! 🎉";
+}
 
 function getLevel(s){
 if(s<=40)return{level:"CRITICO",color:CM.red,emoji:"🔴",label:"CRÍTICO",msg:"Tu empresa enfrenta riesgos significativos que requieren atención inmediata. Es fundamental actuar ahora para proteger tu patrimonio y operación.",cta:"Además de las áreas evaluadas, existen aspectos como planeación financiera, comercio exterior, protección de datos y gobierno corporativo que también podrían representar un riesgo. Un especialista de Auren puede hacer un diagnóstico integral."};
@@ -40,11 +52,34 @@ return{level:"EXCELENTE",color:CM.gold,emoji:"🌟",label:"EXCELENTE",msg:"",cta
 
 let formData={},answers={},currentQ=0,leadId='',quizCompletado=false;
 
+// ===== Tracking Meta Pixel (seguro si fbq aún no cargó) =====
+function fbqt(){ if(window.fbq){ try{ fbq.apply(null,arguments) }catch(e){} } }
+
 // Logos
 function injectLogo(id,cls){const t=document.getElementById('tpl-logo');const s=t.content.querySelector('svg').cloneNode(true);s.classList.add(cls);document.getElementById(id).appendChild(s)}
-injectLogo('logo-welcome','logo-main');injectLogo('logo-quiz','logo-sm');
+injectLogo('logo-welcome','logo-main');injectLogo('logo-quiz','logo-sm');injectLogo('logo-gate','logo-main');
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');window.scrollTo(0,0)}
+
+// ===== Resaltado que sigue al cursor sobre botones y opciones =====
+(function(){
+  var glow=document.getElementById('cursor-glow');
+  if(!glow)return;
+  var INTERACTIVE='.btn, .opt, .feat, .green-tag';
+  document.addEventListener('pointermove',function(e){
+    var el=e.target.closest(INTERACTIVE);
+    if(el){
+      var r=el.getBoundingClientRect();
+      el.style.setProperty('--mx',(e.clientX-r.left)+'px');
+      el.style.setProperty('--my',(e.clientY-r.top)+'px');
+      glow.style.opacity='1';
+      glow.style.transform='translate('+(e.clientX-glow.offsetWidth/2)+'px,'+(e.clientY-glow.offsetHeight/2)+'px)';
+    }else{
+      glow.style.opacity='0';
+    }
+  },{passive:true});
+  document.addEventListener('pointerleave',function(){glow.style.opacity='0'});
+})();
 
 // ===== ENVIAR A GOOGLE SHEETS VÍA FORMULARIO OCULTO =====
 function sendToGoogleSheets(data){
@@ -66,14 +101,13 @@ function sendToGoogleSheets(data){
   setTimeout(function(){document.body.removeChild(form)},1000);
 }
 
-// ===== GUARDAR LEAD APENAS DEJA SUS DATOS (Solo Lead / Incompleto) =====
+// ===== GUARDAR LEAD APENAS DEJA SU NOMBRE (Solo Lead / Incompleto) =====
 function guardarLeadInicial(){
   sendToGoogleSheets({
     id:leadId,
     timestamp:new Date().toISOString(),
     fecha:new Date().toLocaleDateString('es-MX'),
-    nombre:formData.nombre,empresa:formData.empresa,email:formData.email,
-    telefono:formData.telefono,cargo:formData.cargo,
+    nombre:formData.nombre,empresa:'',email:'',telefono:'',cargo:'',
     estado:'Incompleto',
     tipo:'Solo Lead',
     preguntasRespondidas:0
@@ -86,13 +120,13 @@ function payloadParcial(){
     id:leadId,
     timestamp:new Date().toISOString(),
     fecha:new Date().toLocaleDateString('es-MX'),
-    nombre:formData.nombre,empresa:formData.empresa,email:formData.email,
-    telefono:formData.telefono,cargo:formData.cargo,
+    nombre:formData.nombre,empresa:formData.empresa||'',email:formData.email||'',
+    telefono:formData.telefono||'',cargo:formData.cargo||'',
     estado:'Incompleto',
     tipo:'Solo Lead',
     preguntasRespondidas:Object.keys(answers).length
   };
-  for(var i=0;i<20;i++){d['p'+(i+1)]=answers[i]||''}
+  for(var i=0;i<TOTAL_Q;i++){d['p'+(i+1)]=answers[i]||''}
   return d;
 }
 
@@ -108,20 +142,86 @@ function enviarBeacon(data){
   }catch(e){}
 }
 
-// Si abandona el quiz sin terminar, guarda hasta dónde llegó
+// Si abandona sin terminar, guarda hasta dónde llegó
 document.addEventListener('visibilitychange',function(){
-  if(document.visibilityState==='hidden'
-     && leadId
-     && !quizCompletado
-     && document.getElementById('screen-quiz').classList.contains('active')){
-    enviarBeacon(payloadParcial());
+  if(document.visibilityState==='hidden' && leadId && !quizCompletado){
+    var enQuiz=document.getElementById('screen-quiz').classList.contains('active');
+    var enGate=document.getElementById('screen-gate').classList.contains('active');
+    if(enQuiz||enGate) enviarBeacon(payloadParcial());
   }
 });
 
-// Welcome
+// ===== WELCOME: solo pide el nombre =====
 document.getElementById('welcomeForm').addEventListener('submit',function(e){
+  e.preventDefault();const f=this;const input=f.querySelector('[name="nombre"]');
+  const ok=input.value.trim().length>0;
+  document.getElementById('f-nombre').classList.toggle('has-error',!ok);
+  input.classList.toggle('err',!ok);
+  if(!ok)return;
+  formData={nombre:f.nombre.value.trim(),empresa:'',email:'',telefono:'',cargo:''};
+  leadId='L'+Date.now()+'-'+Math.random().toString(36).substr(2,6);
+  quizCompletado=false;answers={};currentQ=0;
+  guardarLeadInicial();
+  fbqt('trackCustom','CheckUpInicio',{content_name:'CheckUp Empresarial'});
+  document.getElementById('quiz-greet').textContent='Hola, '+formData.nombre.split(' ')[0]+' 👋';
+  renderQuestion();showScreen('quiz');
+});
+
+// ===== QUIZ =====
+function renderQuestion(){
+  const q=QS[currentQ],cat=CATS[q.cat];
+  document.getElementById('qCatBadge').innerHTML=cat.icon+' <span style="font-weight:600;color:var(--red)">'+cat.name+'</span>';
+  document.getElementById('qText').textContent=q.text;
+  const cont=document.getElementById('optionsContainer');cont.innerHTML='';
+  OPTS.forEach((o,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='opt opt-in'+(answers[currentQ]===o.v?' sel '+o.cls:'');
+    btn.style.animationDelay=(idx*45)+'ms';
+    btn.innerHTML='<div class="num">'+o.v+'</div><span>'+o.label+'</span><span class="check">✓</span>';
+    btn.onclick=()=>selectAnswer(o.v,o.cls);
+    cont.appendChild(btn);
+  });
+  updateProgress();updateNav();
+  document.getElementById('btnPrev').style.opacity=currentQ===0?'0.35':'1';
+  document.getElementById('btnPrev').style.pointerEvents=currentQ===0?'none':'auto';
+}
+function selectAnswer(v,cls){
+  answers[currentQ]=v;
+  document.querySelectorAll('.opt').forEach((b,i)=>{b.className='opt'+(OPTS[i].v===v?' sel '+cls:'')});
+  updateProgress();
+  fbqt('trackCustom','CheckUpPregunta',{paso:currentQ+1});
+  if(currentQ<TOTAL_Q-1){
+    const c=document.getElementById('questionCard');
+    setTimeout(()=>{c.classList.add('slide-out-next');setTimeout(()=>{currentQ++;renderQuestion();c.classList.remove('slide-out-next')},200)},260);
+  } else {
+    updateNav();
+  }
+}
+function goBack(){if(currentQ<=0)return;const c=document.getElementById('questionCard');c.classList.add('slide-out-prev');setTimeout(()=>{currentQ--;renderQuestion();c.classList.remove('slide-out-prev')},200)}
+function updateProgress(){
+  const answered=Object.keys(answers).length;
+  const p=Math.round((answered/TOTAL_Q)*100);
+  document.getElementById('progressBar').style.width=p+'%';
+  document.getElementById('progressMsg').textContent=progressMessage(answered);
+  document.getElementById('progressPct').textContent=p+'%';
+}
+function updateNav(){
+  const answered=Object.keys(answers).length;
+  const ready=currentQ===TOTAL_Q-1 && answered===TOTAL_Q;
+  document.getElementById('btnFinish').style.display=ready?'inline-flex':'none';
+  document.getElementById('finishHint').style.display=(currentQ===TOTAL_Q-1 && !ready)?'inline':'none';
+}
+
+// ===== GATE: al terminar, pide datos para desbloquear el resultado =====
+function goToGate(){
+  document.getElementById('gate-title').textContent='¡Tu diagnóstico está listo, '+formData.nombre.split(' ')[0]+'!';
+  fbqt('trackCustom','CheckUpFormulario',{content_name:'CheckUp Empresarial'});
+  showScreen('gate');
+}
+
+document.getElementById('gateForm').addEventListener('submit',function(e){
   e.preventDefault();let valid=true;const f=this;
-  ['nombre','empresa','email','telefono'].forEach(k=>{
+  ['email','telefono','empresa'].forEach(k=>{
     const field=document.getElementById('f-'+k),input=f.querySelector('[name="'+k+'"]');let ok=true;
     if(k==='email')ok=/\S+@\S+\.\S+/.test(input.value.trim());
     else if(k==='telefono')ok=input.value.replace(/\D/g,'').length>=10;
@@ -129,39 +229,15 @@ document.getElementById('welcomeForm').addEventListener('submit',function(e){
     field.classList.toggle('has-error',!ok);input.classList.toggle('err',!ok);if(!ok)valid=false;
   });
   if(!valid)return;
-  formData={nombre:f.nombre.value.trim(),empresa:f.empresa.value.trim(),email:f.email.value.trim(),telefono:f.telefono.value.trim(),cargo:f.cargo.value.trim()};
-  leadId='L'+Date.now()+'-'+Math.random().toString(36).substr(2,6);
-  quizCompletado=false;
-  guardarLeadInicial();
-  document.getElementById('quiz-empresa').textContent=formData.empresa;
-  answers={};currentQ=0;buildDots();renderQuestion();showScreen('quiz');
+  formData.email=f.email.value.trim();
+  formData.telefono=f.telefono.value.trim();
+  formData.empresa=f.empresa.value.trim();
+  formData.cargo=f.cargo.value.trim();
+  fbqt('track','Lead',{content_name:'CheckUp Empresarial',content_category:'Autodiagnostico'});
+  finishQuiz();
 });
 
-// Quiz
-function renderQuestion(){
-  const q=QS[currentQ],cat=CATS[q.cat];
-  document.getElementById('qCatBadge').innerHTML=cat.icon+' <span style="font-weight:600;color:var(--red)">'+cat.name+'</span>';
-  document.getElementById('qNum').textContent=String(q.id).padStart(2,'0');
-  document.getElementById('qText').textContent=q.text;
-  const cont=document.getElementById('optionsContainer');cont.innerHTML='';
-  OPTS.forEach(o=>{const btn=document.createElement('button');btn.className='opt'+(answers[currentQ]===o.v?' sel '+o.cls:'');btn.innerHTML='<div class="num">'+o.v+'</div><span>'+o.label+'</span><span class="check">✓</span>';btn.onclick=()=>selectAnswer(o.v,o.cls);cont.appendChild(btn)});
-  updateProgress();updateNav();updateDots();
-  document.getElementById('btnPrev').style.opacity=currentQ===0?'0.35':'1';
-  document.getElementById('btnPrev').style.pointerEvents=currentQ===0?'none':'auto';
-}
-function selectAnswer(v,cls){
-  answers[currentQ]=v;
-  document.querySelectorAll('.opt').forEach((b,i)=>{b.className='opt'+(OPTS[i].v===v?' sel '+cls:'')});
-  if(currentQ<19){setTimeout(()=>{const c=document.getElementById('questionCard');c.classList.add('slide-out-next');setTimeout(()=>{currentQ++;renderQuestion();c.classList.remove('slide-out-next')},280)},350)}
-  else updateNav();
-}
-function goBack(){if(currentQ<=0)return;const c=document.getElementById('questionCard');c.classList.add('slide-out-prev');setTimeout(()=>{currentQ--;renderQuestion();c.classList.remove('slide-out-prev')},280)}
-function updateProgress(){const d=currentQ+(answers[currentQ]?1:0),p=Math.round((d/20)*100);document.getElementById('progressBar').style.width=p+'%';document.getElementById('progressLabel').textContent='Pregunta '+(currentQ+1)+' de 20';document.getElementById('progressPct').textContent=p+'%'}
-function updateNav(){const t=Object.keys(answers).length,s=currentQ===19&&t===20;document.getElementById('btnFinish').style.display=s?'inline-flex':'none';document.getElementById('finishHint').style.display=(currentQ===19&&!s)?'inline':'none'}
-function buildDots(){const c=document.getElementById('dotsContainer');c.innerHTML='';QS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>{if(answers[i]!==undefined||i<=Object.keys(answers).length){const c=document.getElementById('questionCard');c.classList.add(i>currentQ?'slide-out-next':'slide-out-prev');setTimeout(()=>{currentQ=i;renderQuestion();c.className='card q-card'},280)}};c.appendChild(d)})}
-function updateDots(){document.querySelectorAll('.dot').forEach((d,i)=>{d.className='dot'+(i===currentQ?' active':answers[i]!==undefined?' done':'')})}
-
-// Finish
+// ===== RESULTADOS =====
 function finishQuiz(){
   quizCompletado=true;
   const total=Object.values(answers).reduce((a,b)=>a+b,0);
@@ -172,7 +248,7 @@ function finishQuiz(){
   const isExc=total>=91;
   const pct=Math.round((total/100)*100);
 
-  // ===== ENVIAR A GOOGLE SHEETS =====
+  // ===== ENVIAR A GOOGLE SHEETS (lead completo) =====
   sendToGoogleSheets({
     id:leadId,
     timestamp:new Date().toISOString(),
@@ -189,6 +265,7 @@ function finishQuiz(){
     alertasRojas:reds.map(q=>'P'+q.id+': '+q.short).join('; '),
     alertasAmarillas:yellows.map(q=>'P'+q.id+': '+q.short).join('; ')
   });
+  fbqt('trackCustom','CheckUpCompletado',{content_name:'CheckUp Empresarial',score:total,nivel:info.level});
 
   const catScores=Object.entries(CATS).map(([k,cat])=>{const qs=QS.filter(q=>q.cat===k);const avg=qs.reduce((s,q)=>s+(answers[QS.indexOf(q)]||0),0)/qs.length;return{...cat,key:k,avg:Math.round(avg*10)/10,pct:Math.round((avg/5)*100)}});
   const r=72,circ=2*Math.PI*r,dash=(pct/100)*circ,gc=info.color;
@@ -212,7 +289,7 @@ function finishQuiz(){
   if(yellows.length){h+=`<div class="card card--flat alert-section" style="border-color:${CM.orange}33;margin-bottom:14px"><div class="alert-header"><div class="alert-icon" style="background:var(--orange-light)">🟡</div><div><h3 style="color:var(--orange)">Áreas de Oportunidad</h3><p class="sub">${yellows.length} área${yellows.length>1?'s':''} parcial${yellows.length>1?'es':''}</p></div></div>`;yellows.forEach(q=>{const i=QS.indexOf(q);h+=`<div class="alert-item" style="background:var(--orange-light);border-left:4px solid var(--orange)"><div class="left"><div class="cat" style="color:var(--orange)">P${q.id} · ${CATS[q.cat].name}</div><div class="name">${q.short}</div></div><div class="score-badge" style="background:var(--orange)">${answers[i]}/5</div></div>`});h+=`</div>`}
   if(greens.length){h+=`<div class="card card--flat alert-section" style="border-color:${CM.green}33;margin-bottom:14px"><div class="alert-header"><div class="alert-icon" style="background:var(--green-light)">🟢</div><h3 style="color:var(--green)">Áreas Bien Implementadas (${greens.length})</h3></div><div class="green-tags">${greens.map(q=>`<div class="green-tag">P${q.id}: ${q.short}</div>`).join('')}</div></div>`}
   const ctaMsg=isExc?"Impresionante gestión en las áreas evaluadas. Sin embargo, existen temas como comercio exterior, protección de datos, gobierno corporativo y nuevas regulaciones 2026 que podrían requerir atención. Un especialista puede confirmarlo contigo.":info.cta;
-  h+=`<div class="card cta-card" style="margin-bottom:14px"><h3>¿Quieres diagnosticar otras áreas empresariales no incluidas aquí?</h3><p class="cta-msg">${ctaMsg}</p><a href="https://auren.com/mx/contacto/" target="_blank" class="btn" style="width:auto;padding:16px 40px;text-decoration:none">Quiero que un especialista de Auren me contacte</a><p class="fine">Sin costo y sin compromiso. Nuestro equipo analizará tu diagnóstico y te orientará en las áreas que necesites.</p></div>`;
+  h+=`<div class="card cta-card" style="margin-bottom:14px"><h3>¿Quieres diagnosticar otras áreas empresariales no incluidas aquí?</h3><p class="cta-msg">${ctaMsg}</p><a href="https://auren.com/mx/contacto/" target="_blank" rel="noopener" class="btn" style="width:auto;padding:16px 40px;text-decoration:none">Quiero que un especialista de Auren me contacte</a><p class="fine">Sin costo y sin compromiso. Nuestro equipo analizará tu diagnóstico y te orientará en las áreas que necesites.</p></div>`;
   h+=`<div style="text-align:center;margin:14px 0"><button class="btn btn--ghost" onclick="resetAll()">🔄 Realizar nuevo diagnóstico</button></div>`;
   h+=`<div class="footer"><p>En <strong style="color:var(--red)">Auren</strong>, ayudamos a empresas como la tuya a estar protegidas, en cumplimiento y listas para crecer.</p><div class="copy">Auren © 2026 — Consultoría | Auditoría | Asesoría Empresarial</div></div>`;
 
@@ -220,4 +297,4 @@ function finishQuiz(){
   setTimeout(()=>{document.getElementById('resultsContent').classList.add('show');let cur=0;const step=total/(1500/16);const timer=setInterval(()=>{cur+=step;if(cur>=total){cur=total;clearInterval(timer)}document.getElementById('scoreAnim').textContent=Math.round(cur)},16)},100);
 }
 
-function resetAll(){formData={};answers={};currentQ=0;document.getElementById('welcomeForm').reset();showScreen('welcome')}
+function resetAll(){formData={};answers={};currentQ=0;document.getElementById('welcomeForm').reset();document.getElementById('gateForm').reset();showScreen('welcome')}
