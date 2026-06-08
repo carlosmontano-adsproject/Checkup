@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-Up Empresarial | Auren México</title>
+<meta name="description" content="Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa con el autodiagnóstico gratuito de Auren.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#e2231a;--red-light:#fef2f2;--red-dark:#b91c14;--orange:#F59E0B;--orange-light:#FFF7ED;--green:#16A34A;--green-light:#F0FDF4;--gold:#D97706;--bg:#fff;--bg-sub:#F9FAFB;--border:#E5E7EB;--border-h:#D1D5DB;--text:#111827;--text-m:#4B5563;--text-l:#9CA3AF}
+html{scroll-behavior:smooth}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:740px;margin:0 auto;padding:24px 16px}
+.card{background:var(--bg);border-radius:16px;padding:36px 28px;box-shadow:0 4px 28px rgba(0,0,0,.07)}
+.card--flat{box-shadow:none;border:1.5px solid var(--border)}
+.logo-main{display:block;margin:0 auto 4px;width:180px;height:auto}
+.logo-sm{width:80px;height:auto}
+.txt{fill:var(--text)}.swoosh{fill:var(--red)}
+.subtitle{font-size:11px;letter-spacing:3px;color:var(--text-l);text-transform:uppercase;font-weight:600;text-align:center}
+.divider{width:50px;height:3px;background:var(--red);margin:14px auto 22px;border-radius:2px}
+.badge{display:inline-block;background:var(--red-light);border-radius:100px;padding:6px 18px;font-size:12px;color:var(--red);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.badge--cat{padding:5px 14px;font-size:12px;letter-spacing:0}
+.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px}.field label .req{color:var(--red)}
+.field input{width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(226,35,26,.08)}
+.field input.err{border-color:var(--red)}.field .errmsg{font-size:12px;color:var(--red);margin-top:3px;display:none}.field.has-error .errmsg{display:block}
+.btn{background:var(--red);color:#fff;border:none;border-radius:10px;padding:16px 36px;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none}
+.btn:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(226,35,26,.3)}
+.btn--ghost{background:transparent;border:1.5px solid var(--border);color:var(--text-m);padding:12px 24px;font-size:14px;width:auto}.btn--ghost:hover{background:var(--bg-sub);transform:none;box-shadow:none}
+.features{display:flex;justify-content:center;gap:16px;margin-bottom:30px;flex-wrap:wrap}
+.feat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-m);background:var(--bg-sub);border-radius:8px;padding:8px 14px;border:1px solid var(--border);font-weight:500}
+.progress-wrap{background:#F3F4F6;border-radius:100px;height:5px;margin-bottom:6px;overflow:hidden}
+.progress-bar{background:var(--red);height:100%;border-radius:100px;transition:width .5s ease}
+.progress-info{display:flex;justify-content:space-between;font-size:12px;color:var(--text-l);margin-bottom:18px}
+.q-num{font-size:50px;font-weight:900;color:#F3F4F6;line-height:1;margin-bottom:2px;user-select:none}
+.q-text{font-size:17px;font-weight:600;line-height:1.65;color:var(--text);margin-bottom:22px}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;padding:15px 16px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:14px;text-align:left;font-size:15px;font-weight:500;color:var(--text)}
+.opt:hover{background:var(--bg-sub);border-color:var(--border-h)}
+.opt.sel{transform:scale(1.01)}
+.opt .num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#F3F4F6;color:var(--text-m);font-weight:800;font-size:15px;flex-shrink:0;transition:all .25s}
+.opt.sel .num{color:#fff}.opt .check{margin-left:auto;font-size:20px;font-weight:700;display:none}.opt.sel .check{display:block}
+.opt.sel.c-red{border-color:var(--red);background:var(--red-light)}.opt.sel.c-red .num{background:var(--red)}.opt.sel.c-red .check{color:var(--red)}
+.opt.sel.c-orange{border-color:var(--orange);background:var(--orange-light)}.opt.sel.c-orange .num{background:var(--orange)}.opt.sel.c-orange .check{color:var(--orange)}
+.opt.sel.c-green{border-color:var(--green);background:var(--green-light)}.opt.sel.c-green .num{background:var(--green)}.opt.sel.c-green .check{color:var(--green)}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:22px}.nav-row .btn{width:auto}
+.dots{display:flex;justify-content:center;gap:5px;margin-top:16px;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;cursor:pointer;transition:all .25s;background:#F3F4F6;border:1px solid #E5E7EB}
+.dot.active{background:var(--red);border-color:var(--red);transform:scale(1.5)}.dot.done{background:var(--text-l)}
+.q-card{transition:opacity .28s ease,transform .28s ease}.q-card.slide-out-next{opacity:0;transform:translateX(50px)}.q-card.slide-out-prev{opacity:0;transform:translateX(-50px)}
+.results-enter{opacity:0;transform:translateY(20px);transition:all .7s ease}.results-enter.show{opacity:1;transform:translateY(0)}
+.gauge-wrap{position:relative;width:160px;height:160px;margin:0 auto}.gauge-wrap svg{width:100%;height:100%}
+.gauge-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.gauge-score{font-size:36px;font-weight:900}.gauge-label{font-size:11px;color:var(--text-l)}
+.score-top{display:flex;justify-content:center;align-items:center;gap:32px;flex-wrap:wrap}.score-info{text-align:left;max-width:340px}
+.level-badge{display:inline-block;border-radius:100px;padding:5px 16px;margin-bottom:10px;font-weight:800;font-size:14px}
+.score-msg{font-size:14px;color:var(--text-m);line-height:1.6}
+.alert-box{border-radius:12px;padding:16px;margin-top:18px;text-align:left}.alert-box .alert-title{font-size:13px;font-weight:700;margin-bottom:4px}.alert-box p{font-size:13px;color:var(--text-m);line-height:1.6}
+.cat-row{margin-bottom:13px}.cat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}.cat-name{font-size:13px;font-weight:600;color:var(--text)}.cat-score{font-size:13px;font-weight:800}
+.cat-bar{background:#F3F4F6;border-radius:100px;height:8px;overflow:hidden}.cat-fill{height:100%;border-radius:100px;transition:width 1s ease .4s}
+.alert-section{margin-bottom:14px}.alert-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.alert-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.alert-section h3{font-size:15px;font-weight:700;margin:0}.alert-section .sub{font-size:11px;color:var(--text-l);margin:0}
+.alert-item{border-radius:10px;padding:11px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start}
+.alert-item .left .cat{font-size:11px;font-weight:700}.alert-item .left .name{font-size:13px;font-weight:600;color:var(--text);margin-top:3px;line-height:1.4}
+.alert-item .score-badge{font-weight:800;font-size:12px;border-radius:6px;padding:3px 10px;color:#fff;flex-shrink:0;margin-left:12px}
+.green-tags{display:flex;flex-wrap:wrap;gap:6px}.green-tag{background:var(--green-light);border-radius:6px;padding:5px 11px;font-size:12px;color:var(--green);font-weight:600;border:1px solid rgba(22,163,74,.12)}
+.cta-card{text-align:center;border:2px solid rgba(226,35,26,.12);box-shadow:0 4px 20px rgba(226,35,26,.04)}
+.cta-card h3{font-size:21px;font-weight:800;margin-bottom:10px;color:var(--text)}.cta-card .cta-msg{font-size:14px;color:var(--text-m);line-height:1.6;max-width:480px;margin:0 auto 20px}
+.cta-card .btn{width:auto;padding:16px 40px}.cta-card .fine{font-size:12px;color:var(--text-l);margin-top:10px}
+.footer{text-align:center;padding:14px 0 8px}.footer p{font-size:14px;color:var(--text-m);line-height:1.6}.footer .copy{font-size:11px;color:var(--text-l);margin-top:10px}
+.screen{display:none}.screen.active{display:block}
+@media(max-width:600px){.wrap{padding:16px 12px}.card{padding:28px 18px}.score-top{flex-direction:column;text-align:center}.score-info{text-align:center}.features{gap:8px}.feat{font-size:12px;padding:6px 10px}.q-text{font-size:15px}.btn{padding:14px 24px;font-size:15px}}
+</style>
+<!-- Meta Pixel Auren - aurenb.mx -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2470777933335351');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel -->
+
+<!-- Tracker Check-Up Auren -->
+<script>
+(function () {
+  var yaInicio = false, yaCompleto = false, ultimaPregunta = 0;
+
+  function leerPaso() {
+    var txt = document.body.innerText || "";
+    var m = txt.match(/Pregunta\s+(\d+)\s+de\s+20/i);
+    if (!m) return;
+    var n = parseInt(m[1], 10);
+    if (n === ultimaPregunta) return;
+    ultimaPregunta = n;
+
+    // Pregunta 1 = ya pasó el formulario => Lead real (con datos de contacto)
+    if (n === 1 && !yaInicio) {
+      yaInicio = true;
+      fbq('track', 'Lead', {content_name:'CheckUp Empresarial', content_category:'Autodiagnostico'});
+    }
+    // Progreso pregunta por pregunta (para ver dónde abandonan)
+    fbq('trackCustom', 'CheckUpPregunta', {paso:n, total:20});
+  }
+
+  // Completó: clic en "Ver mi diagnóstico" estando en la última pregunta
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('button, a'); if (!el) return;
+    var t = (el.innerText || '').trim().toLowerCase();
+    if (t.indexOf('ver mi diagnóstico') !== -1 && !yaCompleto && ultimaPregunta >= 19) {
+      yaCompleto = true;
+      fbq('trackCustom', 'CheckUpCompletado', {content_name:'CheckUp Empresarial'});
+    }
+  }, true);
+
+  new MutationObserver(leerPaso).observe(document.documentElement,
+    {childList:true, subtree:true, characterData:true});
+  leerPaso();
+})();
+</script>
+<!-- End Tracker -->
+</head>
+<body>
+
+<!-- IFRAME OCULTO para enviar datos a Google Sheets sin redirigir la página -->
+<iframe name="gsheet-iframe" id="gsheet-iframe" style="display:none"></iframe>
+
+<!-- LOGO SVG TEMPLATE -->
+<template id="tpl-logo">
+<svg viewBox="0 0 98 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path class="txt" d="M24.8307 21.7304V19.3456C23.2567 19.4057 22.1726 19.6716 21.5542 20.1263C20.9358 20.5809 20.6307 21.353 20.6307 22.4253C20.6307 23.2574 20.8234 23.9094 21.2089 24.3898C21.5944 24.8616 22.0842 25.1018 22.6865 25.1018C23.3691 25.1018 23.8992 24.8616 24.2686 24.3898C24.646 23.9094 24.8307 23.0258 24.8307 21.7304ZM24.8307 18.3848V15.0993C24.8307 14.2071 24.7263 13.5809 24.5175 13.2206C24.3087 12.8517 23.7787 12.6716 22.9114 12.6716C22.2288 12.6716 21.6907 12.7745 21.3053 12.989C20.9198 13.2034 20.727 13.4179 20.727 13.6324C20.727 13.7782 20.8636 14.0012 21.1366 14.2929C21.4097 14.5846 21.5462 14.9535 21.5462 15.391C21.5462 16.0258 21.3213 16.5662 20.8636 17.0209C20.4139 17.4755 19.8437 17.7071 19.153 17.7071C18.5266 17.7071 17.9886 17.4927 17.5308 17.0552C17.0811 16.6263 16.8482 16.0944 16.8482 15.4767C16.8482 14.4044 17.4586 13.4951 18.6712 12.7488C19.8838 12.0025 21.5622 11.625 23.7145 11.625C25.3768 11.625 26.7661 11.848 27.8904 12.2855C29.0147 12.723 29.5689 13.7096 29.5689 15.2451V22.9571C29.5689 24.2868 29.9222 24.9474 30.637 24.9474C30.8297 24.9474 31.1108 24.8358 31.4561 24.6042L31.9299 25.4277C30.9421 26.6287 29.8018 27.2378 28.5008 27.2378C27.1998 27.2378 26.0032 26.5001 25.0877 25.0331C23.5699 26.5086 21.8754 27.2378 20.0123 27.2378C18.7595 27.2378 17.7718 26.8947 17.049 26.2084C16.3262 25.5221 15.9648 24.6643 15.9648 23.6349C15.9648 20.3836 18.9201 18.6336 24.8227 18.3848"/>
+<path class="txt" d="M49.0626 12.0977V25.8823H51.0886V26.9768H48.0947C46.6018 26.9768 45.6339 27.0202 45.1828 27.0984C44.7398 27.1766 44.4117 27.2287 44.1984 27.2374V24.2059H44.1246C43.6489 25.144 42.9352 25.8823 41.9755 26.4296C41.024 26.9681 39.9905 27.2374 38.8668 27.2374C37.743 27.2374 36.8899 27.0115 36.1353 26.5772C35.3807 26.1342 34.9049 25.6478 34.7081 25.1093C34.5112 24.5707 34.4128 23.7195 34.4128 22.5469V13.2529H32.3867V12.1063H39.2769V21.9563C39.2769 23.459 39.3343 24.4492 39.4573 24.9356C39.5722 25.4133 39.9167 25.6565 40.4745 25.6565C41.0323 25.6565 41.7049 25.3959 42.4349 24.8661C43.1567 24.3362 43.6325 23.7282 43.8621 23.0507C44.0836 22.3732 44.1984 21.4264 44.1984 20.2104V13.2616H41.8279V12.115H49.0544L49.0626 12.0977Z"/>
+<path class="txt" d="M57.7617 11.8392V15.8662H57.8334C58.1124 14.4267 58.5668 13.3643 59.2045 12.6703C59.8422 11.9677 60.5437 11.625 61.3169 11.625C62.0902 11.625 62.6801 11.9077 63.1504 12.4732C63.6207 13.0387 63.8598 13.7327 63.8598 14.5638C63.8598 15.2664 63.6765 15.8405 63.3258 16.2689C62.967 16.6973 62.5366 16.9115 62.0264 16.9115C61.5162 16.9115 61.0858 16.7144 60.7191 16.3117C60.3524 15.909 60.177 15.4635 60.177 14.9837C60.177 14.3753 60.2727 13.9469 60.4799 13.707C60.6792 13.4671 60.7829 13.3043 60.7829 13.2358C60.7829 13.1073 60.6872 13.0387 60.5039 13.0387C59.9299 13.0387 59.3719 13.6299 58.8538 14.8294C58.3276 16.0204 58.0646 17.9568 58.0646 20.63V25.6509H60.6394V26.7647H51.5439V25.6509H53.3375V13.2186H51.5439V12.0877H53.8397C55.0673 12.0877 55.9681 12.0534 56.542 11.9677L57.1638 11.8478H57.7697L57.7617 11.8392Z"/>
+<path class="txt" d="M70.0119 17.3757H73.7001V15.8393C73.7001 14.509 73.5339 13.6506 73.1936 13.2558C72.8533 12.861 72.3942 12.6636 71.8085 12.6636C71.2624 12.6636 70.8192 12.8352 70.4947 13.1871C70.1702 13.5391 70.004 14.4403 70.004 15.8737V17.3757H70.0119ZM78.4568 18.5602H70.004V20.9378C70.004 22.8089 70.1623 24.0964 70.471 24.8088C70.7876 25.5212 71.5078 25.8817 72.6475 25.8817C73.6447 25.8817 74.5707 25.5383 75.4413 24.8603C76.304 24.1822 76.9688 23.1179 77.4279 21.6845H78.4568C78.0294 23.5385 77.2459 24.9289 76.1062 25.8559C74.9585 26.7743 73.5814 27.2378 71.9826 27.2378C69.7982 27.2378 68.0491 26.4396 66.7353 24.8431C65.4215 23.2466 64.7725 21.4012 64.7725 19.3241C64.7725 17.247 65.4373 15.5389 66.7669 13.9768C68.0966 12.4146 69.7586 11.625 71.7452 11.625C73.4627 11.625 74.9585 12.2001 76.2249 13.3416C77.4991 14.4832 78.2431 16.2256 78.4568 18.5688"/>
+<path class="txt" d="M85.8343 11.625V14.7266H85.9079C87.1596 12.6617 88.9185 11.625 91.1847 11.625C92.1909 11.625 93.0745 11.8478 93.8272 12.2847C94.5798 12.7217 95.0625 13.1673 95.2752 13.6214C95.4797 14.0755 95.5861 14.7695 95.5861 15.6948V25.6423H97.615V26.7561H88.6813V25.6423H90.7429V15.4206C90.7429 14.4953 90.6202 13.8955 90.3829 13.6128C90.1375 13.3386 89.8021 13.193 89.3603 13.193C88.7631 13.193 88.035 13.5785 87.1596 14.3411C86.2842 15.1036 85.8424 16.4488 85.8424 18.3766V25.6508H87.9204V26.7647H78.9131V25.6508H80.9911V13.2187H78.954V12.0877H80.2548C81.4247 12.0877 82.5946 12.0106 83.7399 11.8563L85.3271 11.625H85.8424H85.8343Z"/>
+<path class="swoosh" d="M43.5075 41.4689C32.9113 41.4689 22.9692 39.2823 15.5147 35.3045C8.33482 31.4697 4.38547 26.4743 4.38547 21.2182C4.38547 15.9621 8.33482 10.9583 15.5147 7.13188C22.9692 3.15407 32.9032 0.967554 43.5075 0.967554C47.7395 0.967554 51.8584 1.31235 55.7674 1.98512C50.8812 0.86663 45.5912 0.269531 40.1235 0.269531C29.5434 0.269531 19.5852 2.48129 12.058 6.49273C4.28048 10.6387 0 16.248 0 22.2694C0 28.2908 4.28048 33.9001 12.058 38.0461C19.5771 42.0575 29.5434 44.2693 40.1235 44.2693C50.7035 44.2693 60.6617 42.0575 68.1889 38.0461C71.0237 36.5323 73.3901 34.8252 75.2638 32.975C74.1331 33.7908 72.8732 34.5644 71.5002 35.2961C64.0538 39.2739 54.1037 41.4604 43.5075 41.4604"/>
+</svg>
+</template>
+
+<!-- ========== WELCOME ========== -->
+<div id="screen-welcome" class="screen active">
+<div class="wrap">
+  <div style="text-align:center;padding-top:8px" id="logo-welcome"></div>
+  <div class="subtitle">Consultoría · Auditoría · Asesoría Empresarial</div>
+  <div class="divider"></div>
+  <div class="card" style="text-align:center">
+    <div class="badge" style="margin-bottom:14px">Autodiagnóstico Gratuito</div>
+    <h1 style="font-size:30px;font-weight:800;margin-bottom:10px;line-height:1.25">Check-Up Empresarial</h1>
+    <p style="font-size:16px;color:var(--text-m);line-height:1.6;max-width:500px;margin:0 auto 24px">Descubre en 5 minutos el nivel de salud fiscal, legal y corporativa de tu empresa. Responde 20 preguntas y recibe un diagnóstico personalizado al instante.</p>
+    <div class="features">
+      <div class="feat"><span style="font-size:16px">🔒</span>100% Confidencial</div>
+      <div class="feat"><span style="font-size:16px">⏱️</span>Solo 5 minutos</div>
+      <div class="feat"><span style="font-size:16px">📊</span>Resultado inmediato</div>
+    </div>
+    <form id="welcomeForm" style="text-align:left" novalidate>
+      <div class="field" id="f-nombre"><label>Nombre completo <span class="req">*</span></label><input type="text" name="nombre" placeholder="Ej: Juan Pérez García" required><div class="errmsg">Campo requerido</div></div>
+      <div class="field" id="f-empresa"><label>Empresa <span class="req">*</span></label><input type="text" name="empresa" placeholder="Ej: Grupo Industrial del Bajío" required><div class="errmsg">Campo requerido</div></div>
+      <div class="field" id="f-email"><label>Correo electrónico <span class="req">*</span></label><input type="email" name="email" placeholder="Ej: juan@empresa.com" required><div class="errmsg">Ingresa un email válido</div></div>
+      <div class="field" id="f-telefono"><label>Teléfono <span class="req">*</span></label><input type="tel" name="telefono" placeholder="Ej: 477 123 4567" required><div class="errmsg">Mínimo 10 dígitos</div></div>
+      <div class="field" id="f-cargo"><label>Cargo / Puesto</label><input type="text" name="cargo" placeholder="Ej: Director General"></div>
+      <button type="submit" class="btn" style="margin-top:12px">Comenzar mi diagnóstico →</button>
+    </form>
+    <p style="font-size:11px;color:var(--text-l);margin-top:12px">Tu información es confidencial y será utilizada únicamente para generar tu diagnóstico. Al continuar, aceptas nuestro <a href="https://auren.com/mx/politica-de-privacidad/" target="_blank" rel="noopener" style="color:var(--red);text-decoration:underline">Aviso de Privacidad</a>.</p>
+  </div>
+  <div style="text-align:center;margin-top:18px;font-size:11px;color:var(--text-l)">Auren © 2026 — Consultoría | Auditoría | Asesoría Empresarial</div>
+</div>
+</div>
+
+<!-- ========== QUIZ ========== -->
+<div id="screen-quiz" class="screen">
+<div class="wrap">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div id="logo-quiz"></div>
+    <span id="quiz-empresa" style="font-size:13px;color:var(--text-l);font-weight:500"></span>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="progress-info"><span id="progressLabel">Pregunta 1 de 20</span><span id="progressPct">0%</span></div>
+  <div class="card q-card" id="questionCard">
+    <div class="badge badge--cat" id="qCatBadge"></div>
+    <div class="q-num" id="qNum">01</div>
+    <h2 class="q-text" id="qText"></h2>
+    <div class="options" id="optionsContainer"></div>
+    <div class="nav-row">
+      <button class="btn btn--ghost" id="btnPrev" onclick="goBack()">← Anterior</button>
+      <button class="btn" id="btnFinish" style="display:none" onclick="finishQuiz()">Ver mi diagnóstico →</button>
+      <span id="finishHint" style="display:none;font-size:13px;color:var(--orange)">Responde todas las preguntas</span>
+    </div>
+  </div>
+  <div class="dots" id="dotsContainer"></div>
+</div>
+</div>
+
+<!-- ========== RESULTS ========== -->
+<div id="screen-results" class="screen">
+<div class="wrap" style="background:var(--bg-sub);min-height:100vh">
+  <div class="results-enter" id="resultsContent"></div>
+</div>
+</div>
+
+<script>
+// =====================================================
+// ⚠️  PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT  ⚠️
+// =====================================================
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw9V0kE2RJ-g5m-sVZQRinl7iZckJcO7gydxklc94wm11UvS7v9VN0IFyGHVkTJADfHwA/exec";
+// =====================================================
+
+const CATS={fiscal:{name:"Cumplimiento Fiscal y Control Interno",icon:"🏛️"},estrategia:{name:"Estrategia y Optimización Fiscal",icon:"📊"},legal:{name:"Legal y Contratos",icon:"⚖️"},patrimonio:{name:"Sucesión y Protección Patrimonial",icon:"🛡️"},laboral:{name:"Seguridad Social y Laboral",icon:"👥"},gestion:{name:"Gestión y Servicios",icon:"⚙️"}};
+const QS=[
+{id:1,cat:"fiscal",short:"Control interno de proveedores",text:"¿En tu proceso de control interno para contratar proveedores y evitar contingencias con el SAT, tienes y conservas en todos los casos los elementos mínimos de ese proveedor: acta constitutiva, constancia de situación fiscal, INE del representante legal, constancia de activos, personal e infraestructura, constancia de pago de contribuciones y cuotas del IMSS?"},
+{id:2,cat:"fiscal",short:"Expedientes administrativos",text:"¿En los expedientes administrativos de proveedores, tienen y conservan: solicitud de cotización, minutas de negociación, contratos certificados, elementos por los que conoció al proveedor, entregables del servicio y acta de asamblea con elementos objetivos de expectativa razonable de obtener ingresos?"},
+{id:3,cat:"fiscal",short:"Préstamos e inyecciones de capital",text:"En los últimos 5 años, ¿se registraron contablemente los préstamos o inyección de dinero entre socios y empresa, con contratos certificados ante notario, estados de cuenta bancarios de ambas partes, y se verifica el cumplimiento estricto de las cláusulas del contrato?"},
+{id:4,cat:"fiscal",short:"Conciliación de depósitos bancarios",text:"¿Qué controles tienen implementados para validar mensualmente que todo el dinero que entra en la cuenta bancaria (empresarial o personal) está facturado o tiene una razón documentada con contratos certificados y soporte?"},
+{id:5,cat:"fiscal",short:"Beneficiario controlador",text:'¿Tienen sus expedientes, manuales y avisos de "beneficiario controlador" ante el SAT completos y actualizados, considerando que el incumplimiento implica una multa mínima de $500,000?'},
+{id:6,cat:"fiscal",short:"Domicilio fiscal",text:'¿Qué tan actualizado y verificado está su domicilio fiscal? ¿Verifican constantemente que su constancia de situación fiscal esté como "localizado" y que las características del domicilio coincidan con las establecidas en el Código Fiscal?'},
+{id:7,cat:"fiscal",short:"Operaciones entre empresas del grupo",text:"Si tienen varias empresas que facturan entre ellas, ¿en qué nivel tienen implementado sistemática y mensualmente la evidencia del cumplimiento de requisitos documentales (cotizaciones, contratos, entregables, estudio de precios de mercado)?"},
+{id:8,cat:"estrategia",short:"Claridad sobre carga fiscal",text:"¿Qué tan claro estás sobre tu carga fiscal y estrategias legales para optimizarla sin riesgos?"},
+{id:9,cat:"estrategia",short:"Discrepancia fiscal personal",text:"¿Qué tan implementada tienes alguna estrategia que permita blindar fiscalmente los gastos personales de socios y familiares (tarjetas de crédito, compras en tiendas departamentales, depósitos en efectivo) para evitar discrepancia fiscal?"},
+{id:10,cat:"legal",short:"Contratos con clientes y proveedores",text:"¿Se tienen contratos modelo, evidencia de contratación, entregables y anexos con todos los clientes y proveedores? ¿Qué tan completos son tus contratos para prevenir conflictos e incumplimientos?"},
+{id:11,cat:"legal",short:"Documentación corporativa",text:"¿Qué tan organizada y completa está tu documentación corporativa (digital y físico) respecto de todas tus actuaciones incluyendo actas de asamblea anuales, aportaciones de socios y decisiones corporativas de los últimos 5 años?"},
+{id:12,cat:"patrimonio",short:"Plan de sucesión",text:"Un 82% de las empresas que pasan a la siguiente generación se extinguen por no tener un plan de sucesión. ¿Qué tan formalizado está su plan de sucesión?"},
+{id:13,cat:"patrimonio",short:"Plan patrimonial",text:"La prevención en eventualidades (divorcio, muerte, adeudos fiscales, y otros contratiempos) es un blindaje esencial: ¿Qué plan patrimonial tienen y qué tan seguro te sientes ante ello?"},
+{id:14,cat:"laboral",short:"Coincidencia SAT / IMSS",text:"¿Qué tanto coincide tu objeto social, actividad ante SAT/IMSS, salarios pagados y tus operaciones reales, considerando que las diferencias son la primera causa de auditorías del IMSS?"},
+{id:15,cat:"laboral",short:"Inscripción y cuotas IMSS",text:"¿El 100% de tus trabajadores están inscritos ante el IMSS y pagas el 100% de cuotas obrero-patronales correspondientes?"},
+{id:16,cat:"laboral",short:"Cumplimiento REPSE",text:"¿Qué tan bien cumples con la normatividad REPSE si subcontratas servicios especializados? ¿Estás seguro de si estás o no sujeto a esta obligación y las consecuencias de su incumplimiento?"},
+{id:17,cat:"gestion",short:"Satisfacción con servicios administrativos",text:"¿Qué tan satisfecho te sientes actualmente con tus servicios internos-externos de áreas contable-fiscal-financiera-nóminas-administración, frente a tu crecimiento? ¿Te sientes rebasado o ves que esto conllevará un riesgo?"},
+{id:18,cat:"estrategia",short:"Solidez de estrategia fiscal",text:"De tener implementada alguna estrategia fiscal para eficientizar el pago de impuestos, ¿qué tan sólida sientes tu estrategia? ¿Qué tan implementado tienes tu plan de acción para mejorar esa situación?"},
+{id:19,cat:"patrimonio",short:"Protección patrimonial del socio",text:"¿Qué tan protegido te sientes como socio, patrimonialmente, en caso de que ocurra algún problema con la empresa?"},
+{id:20,cat:"estrategia",short:"Justicia en pago de impuestos",text:"¿Sientes que de acuerdo a tus condiciones de negocio, pagas lo justo de impuestos y has implementado algo al respecto?"}
+];
+const OPTS=[{v:1,label:"Nada implementado",cls:"c-red"},{v:2,label:"Muy débil / informal",cls:"c-red"},{v:3,label:"Parcial / en proceso",cls:"c-orange"},{v:4,label:"Sólido, áreas por afinar",cls:"c-green"},{v:5,label:"Totalmente implementado",cls:"c-green"}];
+const CM={red:"#e2231a",orange:"#F59E0B",green:"#16A34A",gold:"#D97706"};
+
+function getLevel(s){
+if(s<=40)return{level:"CRITICO",color:CM.red,emoji:"🔴",label:"CRÍTICO",msg:"Tu empresa enfrenta riesgos significativos que requieren atención inmediata. Es fundamental actuar ahora para proteger tu patrimonio y operación.",cta:"Además de las áreas evaluadas, existen aspectos como planeación financiera, comercio exterior, protección de datos y gobierno corporativo que también podrían representar un riesgo. Un especialista de Auren puede hacer un diagnóstico integral."};
+if(s<=60)return{level:"EN RIESGO",color:CM.orange,emoji:"🟠",label:"EN RIESGO",msg:"Existen áreas importantes de vulnerabilidad que podrían generar problemas a corto plazo si no se atienden.",cta:"Este check-up cubre áreas clave, pero tu empresa puede tener necesidades en temas como comercio exterior, protección de datos, propiedad intelectual o planeación financiera. Nuestros especialistas pueden ampliar el diagnóstico."};
+if(s<=75)return{level:"PARCIAL",color:"#CA8A04",emoji:"🟡",label:"PARCIAL",msg:"Tu empresa tiene bases, pero hay oportunidades claras de mejora y fortalecimiento en áreas clave.",cta:"Hay áreas empresariales como gobierno corporativo, gestión de riesgos, cumplimiento regulatorio sectorial y planeación financiera que no están cubiertas en este diagnóstico. Un especialista puede evaluarlas contigo."};
+if(s<=90)return{level:"SOLIDO",color:CM.green,emoji:"🟢",label:"SÓLIDO",msg:"Buen nivel de implementación. Con algunos ajustes estratégicos puedes alcanzar la excelencia.",cta:"¡Buen nivel! Pero existen áreas que este check-up no cubre: comercio exterior, propiedad intelectual, protección de datos, entre otras. Un especialista de Auren puede revisar esos frentes contigo."};
+return{level:"EXCELENTE",color:CM.gold,emoji:"🌟",label:"EXCELENTE",msg:"",cta:"Impresionante gestión en las áreas evaluadas. Sin embargo, existen temas como comercio exterior, protección de datos, gobierno corporativo y nuevas regulaciones 2026 que podrían requerir atención. Un especialista puede confirmarlo contigo."};
+}
+
+let formData={},answers={},currentQ=0,leadId='',quizCompletado=false;
+
+// Logos
+function injectLogo(id,cls){const t=document.getElementById('tpl-logo');const s=t.content.querySelector('svg').cloneNode(true);s.classList.add(cls);document.getElementById(id).appendChild(s)}
+injectLogo('logo-welcome','logo-main');injectLogo('logo-quiz','logo-sm');
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');window.scrollTo(0,0)}
+
+// ===== ENVIAR A GOOGLE SHEETS VÍA FORMULARIO OCULTO =====
+function sendToGoogleSheets(data){
+  if(!GOOGLE_SCRIPT_URL||GOOGLE_SCRIPT_URL==='PEGAR_TU_URL_AQUI'){
+    console.warn('⚠️ Configura GOOGLE_SCRIPT_URL con tu URL de Apps Script');
+    return;
+  }
+  var form=document.createElement('form');
+  form.method='POST';
+  form.action=GOOGLE_SCRIPT_URL;
+  form.target='gsheet-iframe';
+  Object.keys(data).forEach(function(key){
+    var input=document.createElement('input');
+    input.type='hidden';input.name=key;input.value=(data[key]===undefined||data[key]===null)?'':String(data[key]);
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(function(){document.body.removeChild(form)},1000);
+}
+
+// ===== GUARDAR LEAD APENAS DEJA SUS DATOS (Solo Lead / Incompleto) =====
+function guardarLeadInicial(){
+  sendToGoogleSheets({
+    id:leadId,
+    timestamp:new Date().toISOString(),
+    fecha:new Date().toLocaleDateString('es-MX'),
+    nombre:formData.nombre,empresa:formData.empresa,email:formData.email,
+    telefono:formData.telefono,cargo:formData.cargo,
+    estado:'Incompleto',
+    tipo:'Solo Lead',
+    preguntasRespondidas:0
+  });
+}
+
+// Payload con el avance parcial del quiz (hasta dónde llegó)
+function payloadParcial(){
+  var d={
+    id:leadId,
+    timestamp:new Date().toISOString(),
+    fecha:new Date().toLocaleDateString('es-MX'),
+    nombre:formData.nombre,empresa:formData.empresa,email:formData.email,
+    telefono:formData.telefono,cargo:formData.cargo,
+    estado:'Incompleto',
+    tipo:'Solo Lead',
+    preguntasRespondidas:Object.keys(answers).length
+  };
+  for(var i=0;i<20;i++){d['p'+(i+1)]=answers[i]||''}
+  return d;
+}
+
+// Envío confiable al cerrar o cambiar de pestaña (no bloquea la salida)
+function enviarBeacon(data){
+  if(!GOOGLE_SCRIPT_URL||GOOGLE_SCRIPT_URL==='PEGAR_TU_URL_AQUI')return;
+  try{
+    var fd=new FormData();
+    Object.keys(data).forEach(function(k){
+      fd.append(k,(data[k]===undefined||data[k]===null)?'':String(data[k]));
+    });
+    navigator.sendBeacon(GOOGLE_SCRIPT_URL,fd);
+  }catch(e){}
+}
+
+// Si abandona el quiz sin terminar, guarda hasta dónde llegó
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='hidden'
+     && leadId
+     && !quizCompletado
+     && document.getElementById('screen-quiz').classList.contains('active')){
+    enviarBeacon(payloadParcial());
+  }
+});
+
+// Welcome
+document.getElementById('welcomeForm').addEventListener('submit',function(e){
+  e.preventDefault();let valid=true;const f=this;
+  ['nombre','empresa','email','telefono'].forEach(k=>{
+    const field=document.getElementById('f-'+k),input=f.querySelector('[name="'+k+'"]');let ok=true;
+    if(k==='email')ok=/\S+@\S+\.\S+/.test(input.value.trim());
+    else if(k==='telefono')ok=input.value.replace(/\D/g,'').length>=10;
+    else ok=input.value.trim().length>0;
+    field.classList.toggle('has-error',!ok);input.classList.toggle('err',!ok);if(!ok)valid=false;
+  });
+  if(!valid)return;
+  formData={nombre:f.nombre.value.trim(),empresa:f.empresa.value.trim(),email:f.email.value.trim(),telefono:f.telefono.value.trim(),cargo:f.cargo.value.trim()};
+  leadId='L'+Date.now()+'-'+Math.random().toString(36).substr(2,6);
+  quizCompletado=false;
+  guardarLeadInicial();
+  document.getElementById('quiz-empresa').textContent=formData.empresa;
+  answers={};currentQ=0;buildDots();renderQuestion();showScreen('quiz');
+});
+
+// Quiz
+function renderQuestion(){
+  const q=QS[currentQ],cat=CATS[q.cat];
+  document.getElementById('qCatBadge').innerHTML=cat.icon+' <span style="font-weight:600;color:var(--red)">'+cat.name+'</span>';
+  document.getElementById('qNum').textContent=String(q.id).padStart(2,'0');
+  document.getElementById('qText').textContent=q.text;
+  const cont=document.getElementById('optionsContainer');cont.innerHTML='';
+  OPTS.forEach(o=>{const btn=document.createElement('button');btn.className='opt'+(answers[currentQ]===o.v?' sel '+o.cls:'');btn.innerHTML='<div class="num">'+o.v+'</div><span>'+o.label+'</span><span class="check">✓</span>';btn.onclick=()=>selectAnswer(o.v,o.cls);cont.appendChild(btn)});
+  updateProgress();updateNav();updateDots();
+  document.getElementById('btnPrev').style.opacity=currentQ===0?'0.35':'1';
+  document.getElementById('btnPrev').style.pointerEvents=currentQ===0?'none':'auto';
+}
+function selectAnswer(v,cls){
+  answers[currentQ]=v;
+  document.querySelectorAll('.opt').forEach((b,i)=>{b.className='opt'+(OPTS[i].v===v?' sel '+cls:'')});
+  if(currentQ<19){setTimeout(()=>{const c=document.getElementById('questionCard');c.classList.add('slide-out-next');setTimeout(()=>{currentQ++;renderQuestion();c.classList.remove('slide-out-next')},280)},350)}
+  else updateNav();
+}
+function goBack(){if(currentQ<=0)return;const c=document.getElementById('questionCard');c.classList.add('slide-out-prev');setTimeout(()=>{currentQ--;renderQuestion();c.classList.remove('slide-out-prev')},280)}
+function updateProgress(){const d=currentQ+(answers[currentQ]?1:0),p=Math.round((d/20)*100);document.getElementById('progressBar').style.width=p+'%';document.getElementById('progressLabel').textContent='Pregunta '+(currentQ+1)+' de 20';document.getElementById('progressPct').textContent=p+'%'}
+function updateNav(){const t=Object.keys(answers).length,s=currentQ===19&&t===20;document.getElementById('btnFinish').style.display=s?'inline-flex':'none';document.getElementById('finishHint').style.display=(currentQ===19&&!s)?'inline':'none'}
+function buildDots(){const c=document.getElementById('dotsContainer');c.innerHTML='';QS.forEach((_,i)=>{const d=document.createElement('div');d.className='dot';d.onclick=()=>{if(answers[i]!==undefined||i<=Object.keys(answers).length){const c=document.getElementById('questionCard');c.classList.add(i>currentQ?'slide-out-next':'slide-out-prev');setTimeout(()=>{currentQ=i;renderQuestion();c.className='card q-card'},280)}};c.appendChild(d)})}
+function updateDots(){document.querySelectorAll('.dot').forEach((d,i)=>{d.className='dot'+(i===currentQ?' active':answers[i]!==undefined?' done':'')})}
+
+// Finish
+function finishQuiz(){
+  quizCompletado=true;
+  const total=Object.values(answers).reduce((a,b)=>a+b,0);
+  const info=getLevel(total);
+  const reds=QS.filter((_,i)=>answers[i]<=2);
+  const yellows=QS.filter((_,i)=>answers[i]===3);
+  const greens=QS.filter((_,i)=>answers[i]>=4);
+  const isExc=total>=91;
+  const pct=Math.round((total/100)*100);
+
+  // ===== ENVIAR A GOOGLE SHEETS =====
+  sendToGoogleSheets({
+    id:leadId,
+    timestamp:new Date().toISOString(),
+    fecha:new Date().toLocaleDateString('es-MX'),
+    estado:'Completo',
+    tipo:'Lead Completo',
+    preguntasRespondidas:Object.keys(answers).length,
+    nombre:formData.nombre,empresa:formData.empresa,email:formData.email,telefono:formData.telefono,cargo:formData.cargo,
+    p1:answers[0]||'',p2:answers[1]||'',p3:answers[2]||'',p4:answers[3]||'',p5:answers[4]||'',
+    p6:answers[5]||'',p7:answers[6]||'',p8:answers[7]||'',p9:answers[8]||'',p10:answers[9]||'',
+    p11:answers[10]||'',p12:answers[11]||'',p13:answers[12]||'',p14:answers[13]||'',p15:answers[14]||'',
+    p16:answers[15]||'',p17:answers[16]||'',p18:answers[17]||'',p19:answers[18]||'',p20:answers[19]||'',
+    scoreTotal:total,nivel:info.level,
+    alertasRojas:reds.map(q=>'P'+q.id+': '+q.short).join('; '),
+    alertasAmarillas:yellows.map(q=>'P'+q.id+': '+q.short).join('; ')
+  });
+
+  const catScores=Object.entries(CATS).map(([k,cat])=>{const qs=QS.filter(q=>q.cat===k);const avg=qs.reduce((s,q)=>s+(answers[QS.indexOf(q)]||0),0)/qs.length;return{...cat,key:k,avg:Math.round(avg*10)/10,pct:Math.round((avg/5)*100)}});
+  const r=72,circ=2*Math.PI*r,dash=(pct/100)*circ,gc=info.color;
+  const logoHTML=document.getElementById('tpl-logo').content.querySelector('svg').outerHTML.replace('<svg ','<svg class="logo-sm" ');
+
+  let h=`<div style="text-align:center;margin-bottom:18px">${logoHTML}
+    <h1 style="font-size:24px;font-weight:800;margin:10px 0 4px">Resultados de tu Check-Up Empresarial</h1>
+    <p style="color:var(--text-l);font-size:14px">${formData.empresa} · ${formData.nombre}</p></div>`;
+  h+=`<div class="card" style="text-align:center;margin-bottom:14px"><div class="score-top">
+    <div class="gauge-wrap"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="${r}" fill="none" stroke="#F3F4F6" stroke-width="20"/><circle cx="80" cy="80" r="${r}" fill="none" stroke="${gc}" stroke-width="20" stroke-dasharray="${dash} ${circ}" stroke-linecap="round" transform="rotate(-90 80 80)" style="transition:stroke-dasharray 1.5s ease"/></svg>
+    <div class="gauge-center"><div class="gauge-score" style="color:${gc}" id="scoreAnim">0</div><div class="gauge-label">de 100</div></div></div>
+    <div class="score-info"><div class="level-badge" style="background:${gc}12;border:1.5px solid ${gc}44;color:${gc}">${info.emoji} ${info.label}</div>`;
+  h+=isExc?`<p class="score-msg">¡Felicidades! Tu empresa muestra un nivel sobresaliente. Sin embargo, en 2026 han entrado en vigor <strong style="color:var(--red)">nuevas regulaciones y reformas</strong> que podrían impactar incluso a las empresas mejor preparadas.</p>`:`<p class="score-msg">${info.msg}</p>`;
+  h+=`</div></div>`;
+  if(isExc)h+=`<div class="alert-box" style="background:#FFFBEB;border:1.5px solid #FDE68A"><p class="alert-title" style="color:${CM.gold}">📧 Importante</p><p>Un especialista de Auren revisará tu diagnóstico y se comunicará contigo para asegurarte de que estés al día con los últimos cambios normativos. <strong style="color:var(--text)">Mantente pendiente de tu correo electrónico (${formData.email}).</strong></p></div>`;
+  h+=`</div>`;
+  h+=`<div class="card" style="margin-bottom:14px"><h3 style="font-size:16px;font-weight:700;margin-bottom:16px">📊 Diagnóstico por Área</h3>`;
+  catScores.forEach(c=>{const bc=c.avg<=2?CM.red:c.avg<=3?CM.orange:CM.green;h+=`<div class="cat-row"><div class="cat-head"><span class="cat-name">${c.icon} ${c.name}</span><span class="cat-score" style="color:${bc}">${c.avg}/5</span></div><div class="cat-bar"><div class="cat-fill" style="background:${bc};width:${c.pct}%"></div></div></div>`});
+  h+=`</div>`;
+  if(reds.length){h+=`<div class="card card--flat alert-section" style="border-color:${CM.red}33;margin-bottom:14px"><div class="alert-header"><div class="alert-icon" style="background:var(--red-light)">🔴</div><div><h3 style="color:var(--red)">Alertas Críticas — Acción Inmediata</h3><p class="sub">${reds.length} área${reds.length>1?'s':''} con riesgo alto</p></div></div>`;reds.forEach(q=>{const i=QS.indexOf(q);h+=`<div class="alert-item" style="background:var(--red-light);border-left:4px solid var(--red)"><div class="left"><div class="cat" style="color:var(--red)">P${q.id} · ${CATS[q.cat].name}</div><div class="name">${q.short}</div></div><div class="score-badge" style="background:var(--red)">${answers[i]}/5</div></div>`});h+=`</div>`}
+  if(yellows.length){h+=`<div class="card card--flat alert-section" style="border-color:${CM.orange}33;margin-bottom:14px"><div class="alert-header"><div class="alert-icon" style="background:var(--orange-light)">🟡</div><div><h3 style="color:var(--orange)">Áreas de Oportunidad</h3><p class="sub">${yellows.length} área${yellows.length>1?'s':''} parcial${yellows.length>1?'es':''}</p></div></div>`;yellows.forEach(q=>{const i=QS.indexOf(q);h+=`<div class="alert-item" style="background:var(--orange-light);border-left:4px solid var(--orange)"><div class="left"><div class="cat" style="color:var(--orange)">P${q.id} · ${CATS[q.cat].name}</div><div class="name">${q.short}</div></div><div class="score-badge" style="background:var(--orange)">${answers[i]}/5</div></div>`});h+=`</div>`}
+  if(greens.length){h+=`<div class="card card--flat alert-section" style="border-color:${CM.green}33;margin-bottom:14px"><div class="alert-header"><div class="alert-icon" style="background:var(--green-light)">🟢</div><h3 style="color:var(--green)">Áreas Bien Implementadas (${greens.length})</h3></div><div class="green-tags">${greens.map(q=>`<div class="green-tag">P${q.id}: ${q.short}</div>`).join('')}</div></div>`}
+  const ctaMsg=isExc?"Impresionante gestión en las áreas evaluadas. Sin embargo, existen temas como comercio exterior, protección de datos, gobierno corporativo y nuevas regulaciones 2026 que podrían requerir atención. Un especialista puede confirmarlo contigo.":info.cta;
+  h+=`<div class="card cta-card" style="margin-bottom:14px"><h3>¿Quieres diagnosticar otras áreas empresariales no incluidas aquí?</h3><p class="cta-msg">${ctaMsg}</p><a href="https://auren.com/mx/contacto/" target="_blank" class="btn" style="width:auto;padding:16px 40px;text-decoration:none">Quiero que un especialista de Auren me contacte</a><p class="fine">Sin costo y sin compromiso. Nuestro equipo analizará tu diagnóstico y te orientará en las áreas que necesites.</p></div>`;
+  h+=`<div style="text-align:center;margin:14px 0"><button class="btn btn--ghost" onclick="resetAll()">🔄 Realizar nuevo diagnóstico</button></div>`;
+  h+=`<div class="footer"><p>En <strong style="color:var(--red)">Auren</strong>, ayudamos a empresas como la tuya a estar protegidas, en cumplimiento y listas para crecer.</p><div class="copy">Auren © 2026 — Consultoría | Auditoría | Asesoría Empresarial</div></div>`;
+
+  document.getElementById('resultsContent').innerHTML=h;showScreen('results');
+  setTimeout(()=>{document.getElementById('resultsContent').classList.add('show');let cur=0;const step=total/(1500/16);const timer=setInterval(()=>{cur+=step;if(cur>=total){cur=total;clearInterval(timer)}document.getElementById('scoreAnim').textContent=Math.round(cur)},16)},100);
+}
+
+function resetAll(){formData={};answers={};currentQ=0;document.getElementById('welcomeForm').reset();showScreen('welcome')}
+</script>
+</body>
+</html>
