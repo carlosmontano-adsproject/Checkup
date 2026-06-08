@@ -131,6 +131,18 @@ fbq('track', 'PageView');
 </div>
 </div>
 
+<!-- ========== EXIT INTENT (alerta al intentar salir) ========== -->
+<div id="exit-modal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="exit-title">
+    <button class="modal-close" id="exit-close" aria-label="Cerrar">×</button>
+    <div class="modal-emoji">⏳</div>
+    <h3 id="exit-title">¡Espera! Ya casi terminas</h3>
+    <p id="exit-msg"></p>
+    <button class="btn" id="exit-continue">Continuar mi diagnóstico →</button>
+    <button class="exit-leave-link" id="exit-leave">No, gracias. Prefiero salir</button>
+  </div>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>

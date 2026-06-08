@@ -297,4 +297,54 @@ function finishQuiz(){
   setTimeout(()=>{document.getElementById('resultsContent').classList.add('show');let cur=0;const step=total/(1500/16);const timer=setInterval(()=>{cur+=step;if(cur>=total){cur=total;clearInterval(timer)}document.getElementById('scoreAnim').textContent=Math.round(cur)},16)},100);
 }
 
-function resetAll(){formData={};answers={};currentQ=0;document.getElementById('welcomeForm').reset();document.getElementById('gateForm').reset();showScreen('welcome')}
+function resetAll(){formData={};answers={};currentQ=0;exitShown=false;document.getElementById('welcomeForm').reset();document.getElementById('gateForm').reset();showScreen('welcome')}
+
+// ===== EXIT INTENT: alerta al intentar salir para evitar abandono =====
+let exitShown=false;
+const exitModal=document.getElementById('exit-modal');
+
+function buildExitMsg(){
+  const enGate=document.getElementById('screen-gate').classList.contains('active');
+  if(enGate){
+    return 'Tu diagnóstico ya está <strong>100% listo</strong> 🎉. Solo falta un paso: deja tus datos para verlo al instante.';
+  }
+  const answered=Object.keys(answers).length;
+  const remaining=Math.max(0,TOTAL_Q-answered);
+  if(remaining===0){
+    return 'Ya respondiste todo. ¡Solo falta un clic para ver el diagnóstico de tu empresa!';
+  }
+  const mins=Math.max(1,Math.ceil((remaining*10)/60));
+  const nombre=formData.nombre?(', '+formData.nombre.split(' ')[0]):'';
+  return 'Te faltan solo <strong>'+remaining+' pregunta'+(remaining>1?'s':'')+'</strong> (menos de '+mins+' minuto'+(mins>1?'s':'')+') para conocer el estado de salud de tu empresa'+nombre+'. ¡No lo dejes a medias!';
+}
+
+function showExitModal(){
+  if(!exitModal)return;
+  document.getElementById('exit-msg').innerHTML=buildExitMsg();
+  exitModal.classList.add('show');
+  exitModal.setAttribute('aria-hidden','false');
+  exitShown=true;
+  fbqt('trackCustom','CheckUpExitIntent',{paso:Object.keys(answers).length});
+}
+function closeExitModal(){
+  if(!exitModal)return;
+  exitModal.classList.remove('show');
+  exitModal.setAttribute('aria-hidden','true');
+}
+
+// Detecta cuando el cursor sale por la parte superior de la ventana (intención de cerrar)
+document.addEventListener('mouseout',function(e){
+  if(exitShown)return;
+  if(e.relatedTarget||e.toElement)return;      // sigue dentro de la página
+  if((e.clientY||0)>8)return;                   // solo borde superior
+  if(!leadId||quizCompletado)return;            // solo durante el check-up activo
+  const enQuiz=document.getElementById('screen-quiz').classList.contains('active');
+  const enGate=document.getElementById('screen-gate').classList.contains('active');
+  if(enQuiz||enGate)showExitModal();
+});
+
+document.getElementById('exit-continue').addEventListener('click',closeExitModal);
+document.getElementById('exit-close').addEventListener('click',closeExitModal);
+document.getElementById('exit-leave').addEventListener('click',closeExitModal);
+exitModal.addEventListener('click',function(e){if(e.target===exitModal)closeExitModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeExitModal()});
