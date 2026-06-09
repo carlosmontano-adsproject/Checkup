@@ -1,7 +1,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--red:#e2231a;--red-light:#fef2f2;--red-dark:#b91c14;--orange:#F59E0B;--orange-light:#FFF7ED;--green:#16A34A;--green-light:#F0FDF4;--gold:#D97706;--bg:#fff;--bg-sub:#F9FAFB;--border:#E5E7EB;--border-h:#D1D5DB;--text:#111827;--text-m:#4B5563;--text-l:#9CA3AF}
 html{scroll-behavior:smooth}
-body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .wrap{max-width:740px;margin:0 auto;padding:24px 16px}
 .card{background:var(--bg);border-radius:16px;padding:36px 28px;box-shadow:0 4px 28px rgba(0,0,0,.07)}
 .card--flat{box-shadow:none;border:1.5px solid var(--border)}
@@ -13,7 +13,7 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .badge{display:inline-block;background:var(--red-light);border-radius:100px;padding:6px 18px;font-size:12px;color:var(--red);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .badge--cat{padding:5px 14px;font-size:12px;letter-spacing:0}
 .field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px}.field label .req{color:var(--red)}
-.field input{width:100%;padding:13px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input{width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:16px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .2s,box-shadow .2s}
 .field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(226,35,26,.08)}
 .field input.err{border-color:var(--red)}.field .errmsg{font-size:12px;color:var(--red);margin-top:3px;display:none}.field.has-error .errmsg{display:block}
 .btn{background:var(--red);color:#fff;border:none;border-radius:10px;padding:16px 36px;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none}
@@ -61,7 +61,41 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .cta-card .btn{width:auto;padding:16px 40px}.cta-card .fine{font-size:12px;color:var(--text-l);margin-top:10px}
 .footer{text-align:center;padding:14px 0 8px}.footer p{font-size:14px;color:var(--text-m);line-height:1.6}.footer .copy{font-size:11px;color:var(--text-l);margin-top:10px}
 .screen{display:none}.screen.active{display:block}
-@media(max-width:600px){.wrap{padding:16px 12px}.card{padding:28px 18px}.score-top{flex-direction:column;text-align:center}.score-info{text-align:center}.features{gap:8px}.feat{font-size:12px;padding:6px 10px}.q-text{font-size:15px}.btn{padding:14px 24px;font-size:15px}}
+@media(max-width:600px){
+  .wrap{padding:16px 14px;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+  .card{padding:24px 18px;border-radius:14px}
+  .logo-main{width:148px}
+  .subtitle{font-size:10px;letter-spacing:2px}
+  .features{gap:8px;margin-bottom:24px}
+  .feat{font-size:12px;padding:8px 12px}
+  .field input{padding:13px 14px}
+  .q-text{font-size:16px;line-height:1.55;margin-bottom:18px}
+  .badge--cat{font-size:11px;line-height:1.35}
+  .options{gap:9px}
+  .opt{padding:16px 14px;gap:12px;font-size:15px}
+  .opt .num{width:34px;height:34px;font-size:14px}
+  .opt .check{font-size:18px}
+  .nav-row{margin-top:18px}
+  .btn{padding:15px 22px;font-size:15px}
+  .nav-row .btn{padding:13px 18px}
+  .score-top{flex-direction:column;text-align:center;gap:18px}
+  .score-info{text-align:center}
+  .gauge-wrap{width:150px;height:150px}
+  .alert-item{padding:12px}
+  .cta-card h3{font-size:19px}
+  .cat-name{font-size:12px}
+  .modal-card{padding:30px 22px calc(22px + env(safe-area-inset-bottom))}
+  .modal-card h3{font-size:20px}
+  .modal-emoji,.gate-emoji{font-size:42px}
+}
+@media(max-width:380px){
+  .card{padding:20px 14px}
+  .feat{font-size:11px;padding:7px 9px;gap:5px}
+  .features{gap:6px}
+  .opt{padding:14px 12px;gap:10px;font-size:14.5px}
+  .opt .num{width:32px;height:32px;font-size:13px}
+  .q-text{font-size:15px}
+}
 
 /* ===== Resaltado que sigue al cursor ===== */
 #cursor-glow{position:fixed;top:0;left:0;width:46px;height:46px;border-radius:50%;pointer-events:none;z-index:9999;opacity:0;background:radial-gradient(circle,rgba(226,35,26,.45),rgba(226,35,26,0) 70%);filter:blur(6px);transition:opacity .25s ease;will-change:transform}
@@ -99,6 +133,23 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .modal-close:hover{background:var(--bg-sub);color:var(--text)}
 .exit-leave-link{display:inline-block;margin-top:12px;background:none;border:none;color:var(--text-l);font-size:13px;cursor:pointer;text-decoration:underline}
 .exit-leave-link:hover{color:var(--text-m)}
+
+/* ===== Feedback táctil y dispositivos sin hover ===== */
+@media(hover:none){
+  #cursor-glow{display:none}
+  .btn:hover{background:var(--red);transform:none;box-shadow:none}
+  .btn--ghost:hover{background:transparent}
+  .opt:hover{background:var(--bg);border-color:var(--border)}
+  .opt:hover::before{opacity:0}
+}
+.opt:active{transform:scale(.985);border-color:var(--border-h)}
+.btn:active{transform:scale(.98)}
+
+/* ===== Barra de progreso fija al hacer scroll (solo móvil) ===== */
+@media(max-width:600px){
+  .quiz-top{position:sticky;top:0;z-index:6;background:var(--bg);margin:0 -14px;padding:10px 14px;box-shadow:0 8px 14px -12px rgba(0,0,0,.3)}
+  .quiz-top .progress-info{margin-bottom:0}
+}
 
 /* ===== Accesibilidad: respeta a quien prefiere menos movimiento ===== */
 @media(prefers-reduced-motion:reduce){
