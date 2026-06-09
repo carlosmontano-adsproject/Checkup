@@ -22,3 +22,6 @@ npm-debug.log*
 # Carpetas de build
 dist/
 build/
+
+# Artefactos de empaquetado (ZIP para subir al hosting)
+*.zip
