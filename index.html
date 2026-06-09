@@ -22,7 +22,7 @@
 <meta name="twitter:image" content="https://aurenb.mx/check-up/og-image.png">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=9">
 <!-- Meta Pixel Auren - aurenb.mx -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -83,12 +83,14 @@ fbq('track', 'PageView');
 <!-- ========== QUIZ ========== -->
 <div id="screen-quiz" class="screen">
 <div class="wrap">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-    <div id="logo-quiz"></div>
-    <span id="quiz-greet" style="font-size:13px;color:var(--text-l);font-weight:500"></span>
+  <div class="quiz-top">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div id="logo-quiz"></div>
+      <span id="quiz-greet" style="font-size:13px;color:var(--text-l);font-weight:500"></span>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-info"><span id="progressMsg">¡Comencemos! 💪</span><span id="progressPct">0%</span></div>
   </div>
-  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-  <div class="progress-info"><span id="progressMsg">¡Comencemos! 💪</span><span id="progressPct">0%</span></div>
   <div class="card q-card" id="questionCard">
     <div class="badge badge--cat" id="qCatBadge"></div>
     <h2 class="q-text" id="qText"></h2>
@@ -143,6 +145,6 @@ fbq('track', 'PageView');
   </div>
 </div>
 
-<script src="script.js?v=8"></script>
+<script src="script.js?v=9"></script>
 </body>
 </html>
