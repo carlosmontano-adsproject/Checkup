@@ -1,9 +1,9 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--red:#e2231a;--red-light:#fef2f2;--red-dark:#b91c14;--orange:#F59E0B;--orange-light:#FFF7ED;--green:#16A34A;--green-light:#F0FDF4;--gold:#D97706;--bg:#fff;--bg-sub:#F9FAFB;--border:#E5E7EB;--border-h:#D1D5DB;--text:#111827;--text-m:#4B5563;--text-l:#9CA3AF}
 html{scroll-behavior:smooth}
-body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:radial-gradient(1100px 480px at 50% -8%,rgba(226,35,26,.07),transparent 60%),linear-gradient(180deg,#ffffff 0%,#fbfafa 100%);background-attachment:fixed;color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .wrap{max-width:740px;margin:0 auto;padding:24px 16px}
-.card{background:var(--bg);border-radius:16px;padding:36px 28px;box-shadow:0 4px 28px rgba(0,0,0,.07)}
+.card{background:var(--bg);border-radius:20px;padding:38px 30px;box-shadow:0 18px 50px -12px rgba(17,24,39,.16),0 4px 12px -4px rgba(17,24,39,.06)}
 .card--flat{box-shadow:none;border:1.5px solid var(--border)}
 .logo-main{display:block;margin:0 auto 4px;width:180px;height:auto}
 .logo-sm{width:80px;height:auto}
@@ -16,8 +16,8 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .field input{width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg);color:var(--text);font-size:16px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .2s,box-shadow .2s}
 .field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(226,35,26,.08)}
 .field input.err{border-color:var(--red)}.field .errmsg{font-size:12px;color:var(--red);margin-top:3px;display:none}.field.has-error .errmsg{display:block}
-.btn{background:var(--red);color:#fff;border:none;border-radius:10px;padding:16px 36px;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none}
-.btn:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 4px 14px rgba(226,35,26,.3)}
+.btn{background:linear-gradient(135deg,#ef3b32 0%,#e2231a 55%,#b91c14 100%);color:#fff;border:none;border-radius:12px;padding:16px 36px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .25s,filter .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;text-decoration:none;box-shadow:0 8px 20px -6px rgba(226,35,26,.5)}
+.btn:hover{filter:brightness(1.05);transform:translateY(-2px);box-shadow:0 12px 26px -6px rgba(226,35,26,.55)}
 .btn--ghost{background:transparent;border:1.5px solid var(--border);color:var(--text-m);padding:12px 24px;font-size:14px;width:auto}.btn--ghost:hover{background:var(--bg-sub);transform:none;box-shadow:none}
 .features{display:flex;justify-content:center;gap:16px;margin-bottom:30px;flex-wrap:wrap}
 .feat{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-m);background:var(--bg-sub);border-radius:8px;padding:8px 14px;border:1px solid var(--border);font-weight:500}
@@ -149,6 +149,27 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 @media(max-width:600px){
   .quiz-top{position:sticky;top:0;z-index:6;background:var(--bg);margin:0 -14px;padding:10px 14px;box-shadow:0 8px 14px -12px rgba(0,0,0,.3)}
   .quiz-top .progress-info{margin-bottom:0}
+}
+
+/* ===== Pulido premium / portada impactante ===== */
+.logo-main{width:200px}
+.divider{width:58px;height:4px;background:linear-gradient(90deg,#ff6a5e,var(--red))}
+.badge{box-shadow:0 3px 10px rgba(226,35,26,.14)}
+.hero-title{font-size:36px;font-weight:800;line-height:1.18;letter-spacing:-.5px;margin-bottom:12px}
+.hero-title .hl{background:linear-gradient(135deg,#ef3b32,#b91c14);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--red)}
+.feat{transition:transform .2s,border-color .2s,color .2s,box-shadow .2s;box-shadow:0 1px 3px rgba(17,24,39,.05)}
+.field input:focus{box-shadow:0 0 0 4px rgba(226,35,26,.1)}
+.card--flat{box-shadow:none}
+.cta-card{box-shadow:0 18px 50px -14px rgba(226,35,26,.18)}
+@media(hover:hover){
+  .feat:hover{transform:translateY(-2px);border-color:var(--red);color:var(--red);box-shadow:0 6px 16px -6px rgba(226,35,26,.25)}
+}
+@media(max-width:600px){
+  .logo-main{width:158px}
+  .hero-title{font-size:29px}
+}
+@media(max-width:380px){
+  .hero-title{font-size:25px}
 }
 
 /* ===== Accesibilidad: respeta a quien prefiere menos movimiento ===== */
